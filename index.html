@@ -1,0 +1,3659 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secret Santa – Wie is de Mol? Game v5 (volledig)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --widm-bg: #050a08;
+      --widm-panel: #0a1410;
+      --widm-panel-glass: rgba(10, 20, 16, 0.85);
+      --widm-green: #00ff9d;
+      --widm-green-dim: #00b871;
+      --widm-text: #e0f2eb;
+      --widm-muted: #8da69c;
+      --widm-border: rgba(0, 255, 157, 0.3);
+      --widm-accent-red: #ff4d4d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--widm-bg);
+      background-image: 
+        linear-gradient(rgba(0, 255, 157, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 157, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: var(--widm-text);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--widm-green); text-decoration: none; }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      background: var(--widm-panel-glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--widm-border);
+      border-radius: 4px;
+      padding: 2rem;
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.05);
+      position: relative;
+    }
+
+    /* Header Styling */
+    h1 {
+      font-family: 'Share Tech Mono', monospace;
+      text-align: center;
+      color: var(--widm-green);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin: 0 0 1rem;
+      text-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
+      font-size: 2.5rem;
+      border-bottom: 1px solid var(--widm-border);
+      padding-bottom: 1rem;
+    }
+
+    h1 span {
+      display: block;
+      font-size: 1rem;
+      color: var(--widm-muted);
+      letter-spacing: 0.3em;
+      margin-top: 0.5rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--widm-muted);
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    /* Secret Target Box */
+    .secret-for {
+      text-align: center;
+      margin: 0 auto 2rem;
+      padding: 1rem;
+      background: rgba(0, 255, 157, 0.05);
+      border: 1px dashed var(--widm-border);
+      display: inline-block;
+      border-radius: 4px;
+    }
+
+    .secret-for span {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-green);
+      font-size: 1.2rem;
+    }
+
+    .intro-brief {
+      margin: 1.5rem 0 2rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 255, 157, 0.3);
+      background: rgba(0, 255, 157, 0.06);
+      border-radius: 6px;
+      line-height: 1.7;
+    }
+
+    .intro-lead {
+      margin: 1rem 0 1.5rem;
+      font-size: 1rem;
+      color: var(--widm-text);
+    }
+
+    .intro-card {
+      border: 1px solid rgba(0, 255, 157, 0.3);
+      background: rgba(0, 255, 157, 0.04);
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .intro-card .target-line {
+      margin-top: 0.8rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--widm-green);
+      display: inline-flex;
+      gap: 0.3rem;
+      align-items: baseline;
+    }
+
+    .intro-brief h3 {
+      margin-top: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--widm-green);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .intro-brief p,
+    .intro-brief li {
+      color: var(--widm-text);
+      font-size: 0.95rem;
+    }
+
+    .intro-brief ul {
+      padding-left: 1.2rem;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .story-callout {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-left: 4px solid var(--widm-green);
+      background: rgba(0, 0, 0, 0.35);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* Navigation Tabs */
+    .top-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--widm-border);
+      padding-bottom: 1rem;
+    }
+
+    .top-tab-button {
+      background: transparent;
+      border: 1px solid var(--widm-border);
+      color: var(--widm-muted);
+      padding: 0.8rem 1.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    }
+
+    .top-tab-button:hover,
+    .top-tab-button.active {
+      background: rgba(0, 255, 157, 0.1);
+      color: var(--widm-green);
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+    }
+
+    .top-tab-button.locked-tab {
+      opacity: 0.45;
+      border-style: dashed;
+      cursor: not-allowed;
+      color: var(--widm-muted);
+    }
+
+    .top-tab-panel { display: none; animation: fadeIn 0.5s ease; }
+    .top-tab-panel.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Layout Grid */
+    .layout {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    /* @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } } */
+
+    /* Section Headers */
+    .round-title {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-green);
+      border-left: 4px solid var(--widm-green);
+      padding-left: 1rem;
+      margin-top: 0;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, rgba(0,255,157,0.1), transparent);
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    /* MAP SECTION - BLUEPRINT STYLE */
+    .map-section {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--widm-border);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .map-flex {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .map-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      overflow: visible;
+      min-height: 600px; /* Ensure space for rotation */
+    }
+
+    .map {
+      display: grid;
+      /* Default grid, will be overridden by JS */
+      grid-template-columns: repeat(10, 1fr); 
+      gap: 4px;
+      background-color: #001a13;
+      /* Underlay blueprint image + subtle grid overlay */
+      background-image: 
+        linear-gradient(rgba(0, 255, 157, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 157, 0.1) 1px, transparent 1px),
+        url('image.png');
+      background-size: cover, cover, cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 1rem;
+      border: 2px solid var(--widm-muted);
+      position: relative;
+      width: 600px; /* Fixed width for consistent rotation */
+      height: 600px; /* Fixed height (square) */
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), margin 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    /* Map Markers (Locations) */
+    .map-marker {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: var(--widm-green);
+      color: #000;
+      border-radius: 50%;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: bold;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px var(--widm-green);
+      z-index: 20;
+      transition: all 0.3s;
+      cursor: help;
+    }
+
+    .admin-mode .map-marker {
+      cursor: grab;
+    }
+    
+    .map-marker.status-hidden {
+      display: none;
+    }
+    
+    .map-marker.status-eliminated {
+      background: #333;
+      color: #777;
+      box-shadow: none;
+      border: 2px solid #555;
+    }
+    .map-marker.status-eliminated::after {
+      content: 'X';
+      color: var(--widm-accent-red);
+      font-size: 1.2rem;
+      position: absolute;
+    }
+
+    .map-marker.status-winner {
+      background: #fff;
+      box-shadow: 0 0 20px #fff, 0 0 40px var(--widm-green);
+      transform: translate(-50%, -50%) scale(1.2);
+      z-index: 30;
+      animation: pulse-winner 2s infinite;
+    }
+    
+    @keyframes pulse-winner {
+      0% { box-shadow: 0 0 20px #fff; }
+      50% { box-shadow: 0 0 40px #fff, 0 0 60px var(--widm-green); }
+      100% { box-shadow: 0 0 20px #fff; }
+    }
+
+    /* Tooltip for markers */
+    .map-marker:hover::before {
+      content: attr(data-name);
+      position: absolute;
+      bottom: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      pointer-events: none;
+      margin-bottom: 5px;
+    }
+
+    .map-cell-admin {
+      cursor: pointer;
+    }
+
+    .map-cell-admin:hover {
+      outline: 1px dashed var(--widm-green);
+    }
+
+    .map-admin-helper {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(0,255,157,0.4);
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: #daf5dd;
+      pointer-events: none;
+      max-width: 220px;
+      line-height: 1.3;
+      z-index: 50;
+    }
+
+    .tab-toggle-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .tab-visibility-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+      max-width: 380px;
+    }
+
+    .tab-visibility-row {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 0.55rem;
+      align-items: center;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+
+    .tab-visibility-row input[type="checkbox"] {
+      margin: 0;
+      accent-color: var(--widm-green);
+      transform: scale(1.05);
+      justify-self: flex-start;
+    }
+
+    .tab-toggle-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+          background: rgba(0,0,0,0.35);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+        .tab-toggle-item.locked {
+          border-color: rgba(255,65,65,0.5);
+          box-shadow: 0 0 10px rgba(255,65,65,0.15);
+        }
+
+        .tab-toggle-item.prereq-hint {
+          position: relative;
+        }
+
+        .tab-toggle-item .lock-message {
+          font-size: 0.75rem;
+          color: #ff8c8c;
+          margin-top: 0.2rem;
+        }
+
+    .tab-toggle-info {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .tab-toggle-title {
+      font-weight: 600;
+      color: var(--widm-green);
+      margin-bottom: 0.2rem;
+    }
+
+    .tab-toggle-helper {
+      font-size: 0.8rem;
+      color: var(--widm-muted);
+    }
+
+    .tab-toggle-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .tab-toggle-status {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ff8c8c;
+    }
+
+    .tab-toggle-status.status-on {
+      border-color: rgba(0,255,157,0.5);
+      color: var(--widm-green);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-switch .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255,255,255,0.2);
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-switch .slider:before {
+      position: absolute;
+      content: '';
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .slider {
+      background-color: rgba(0,255,157,0.5);
+    }
+
+    .toggle-switch input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Rotated Map State */
+    .map.rotated-45 {
+      transform: rotate(-45deg) scale(0.75);
+      margin: 0;
+      border-color: var(--widm-green);
+      box-shadow: 0 0 60px rgba(0, 255, 157, 0.15);
+    }
+    
+    /* Counter-rotate cells so they appear as squares (upright) */
+    .map.rotated-45 .map-cell {
+      transform: rotate(45deg);
+    }
+    /* Note: Labels and markers inside .map-cell will automatically be upright 
+       because they inherit the counter-rotation of the cell. */
+
+    /* Radar Scan Effect - only visible if no custom map? Or always? Let's keep it subtle */
+    .map::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 5px;
+      background: rgba(0, 255, 157, 0.5);
+      box-shadow: 0 0 15px var(--widm-green);
+      animation: scan 6s linear infinite;
+      pointer-events: none;
+      opacity: 0.2;
+    }
+    @keyframes scan { 0% { top: -5%; } 100% { top: 105%; } }
+
+    .map-cell {
+      min-height: 60px;
+      padding: 0.2rem;
+      font-size: 0.7rem;
+      position: relative;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    /* Cell Types */
+    .cell-empty {
+      background: transparent;
+      border: 1px dashed rgba(148, 168, 159, 0.1);
+      opacity: 0.5; /* Slightly more visible to help editing */
+    }
+    
+    /* When editing, we might want empty cells to be more visible. 
+       But in view mode, maybe less? For now, keep it simple. */
+
+    .cell-room {
+      background: rgba(0, 255, 157, 0.25); /* Greenish transparent overlay */
+      border: 1px solid rgba(0, 255, 157, 0.6);
+      box-shadow: 0 0 10px rgba(0, 255, 157, 0.1);
+      backdrop-filter: blur(2px);
+    }
+    .cell-room:hover {
+      background: rgba(0, 255, 157, 0.4);
+      border-color: var(--widm-green);
+    }
+
+    .cell-hallway {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px dotted rgba(255,255,255,0.3);
+    }
+
+    .cell-start {
+      border: 2px solid var(--widm-green);
+      background: rgba(0, 255, 157, 0.4);
+    }
+    .cell-start::before {
+      content: 'START';
+      position: absolute;
+      top: -8px; left: 50%; transform: translateX(-50%);
+      background: var(--widm-green);
+      color: #000;
+      font-size: 0.6rem;
+      padding: 0 4px;
+      font-weight: bold;
+      border-radius: 2px;
+    }
+
+    .map-cell-label {
+      display: block;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-green);
+      font-size: 0.75rem;
+      line-height: 1.1;
+      word-break: break-word;
+    }
+
+    /* HINTS SYSTEM */
+    .hints-container {
+      margin-top: 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .hint-card {
+      background: rgba(0, 255, 157, 0.05);
+      border: 1px solid var(--widm-border);
+      padding: 1rem;
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .hint-card.locked {
+      background: rgba(0,0,0,0.3);
+      border-style: dashed;
+    }
+    .hint-content {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-text);
+    }
+    .hint-blur {
+      filter: blur(5px);
+      user-select: none;
+      opacity: 0.5;
+    }
+    .hint-unlock-area {
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .hint-unlock-input {
+      background: #000;
+      border: 1px solid var(--widm-muted);
+      color: var(--widm-green);
+      padding: 0.3rem;
+      font-family: 'Share Tech Mono', monospace;
+      width: 150px;
+      text-transform: uppercase;
+    }
+    .hint-btn {
+      background: var(--widm-green);
+      color: #000;
+      border: none;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .hint-btn:hover { background: #fff; }
+
+    /* SUSPECTS GRID - CARD STYLE */
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+    }
+
+    label.person {
+      display: block;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    label.person:hover {
+      transform: translateY(-5px);
+      border-color: var(--widm-green);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      background: rgba(0, 255, 157, 0.05);
+    }
+
+    label.person input[type="checkbox"] {
+      position: absolute;
+      top: 10px; right: 10px;
+      accent-color: var(--widm-accent-red);
+      transform: scale(1.2);
+    }
+
+    .photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--widm-muted);
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+    }
+    
+    .no-photo {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 2px dashed #555;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      color: #777; font-size: 0.8rem;
+    }
+
+    .name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--widm-text);
+      margin-bottom: 0.2rem;
+    }
+
+    .role {
+      font-size: 0.85rem;
+      color: var(--widm-muted);
+      font-style: italic;
+    }
+
+    /* Eliminated State */
+    label.person input:checked ~ .person-content {
+      opacity: 0.5;
+      filter: grayscale(100%);
+    }
+    
+    label.person input:checked ~ .person-content .photo {
+      border-color: var(--widm-accent-red);
+    }
+
+    label.person input:checked::after {
+      content: 'ELIMINATED';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      color: var(--widm-accent-red);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border: 3px solid var(--widm-accent-red);
+      padding: 0.2rem 0.5rem;
+      background: rgba(0,0,0,0.8);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Admin & Buttons */
+    .admin-btn {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: transparent;
+      border: 1px solid #333;
+      color: #555;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      opacity: 0.3;
+    }
+    .admin-btn:hover { opacity: 1; color: var(--widm-green); border-color: var(--widm-green); }
+
+    .mini-btn {
+      background: rgba(0, 255, 157, 0.1);
+      border: 1px solid var(--widm-green);
+      color: var(--widm-green);
+      padding: 0.3rem 0.8rem;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+    .mini-btn:hover { background: var(--widm-green); color: #000; }
+
+    /* Inputs */
+    input, textarea {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--widm-muted);
+      color: var(--widm-text);
+      padding: 0.5rem;
+      font-family: inherit;
+      width: 100%;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--widm-green);
+      box-shadow: 0 0 10px rgba(0,255,157,0.2);
+    }
+
+    .suspect-note {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      height: 50px;
+      resize: none;
+      background: rgba(0, 0, 0, 0.6);
+      border-color: #333;
+    }
+    .suspect-note:focus {
+      background: rgba(0, 0, 0, 0.8);
+      border-color: var(--widm-green);
+    }
+
+    .round-suspect-picker {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid rgba(0, 255, 157, 0.2);
+      background: rgba(0, 0, 0, 0.35);
+    }
+    .picker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-green);
+      margin-bottom: 0.5rem;
+    }
+    .picker-count {
+      font-size: 0.85rem;
+      color: var(--widm-muted);
+    }
+    .suspect-pick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.4rem;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    .suspect-pick {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--widm-text);
+      padding: 0.2rem 0.4rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+    }
+    .suspect-pick input {
+      width: auto;
+    }
+    .round-hint-chip {
+      margin-top: 0.8rem;
+      padding: 0.6rem 0.8rem;
+      background: rgba(0, 255, 157, 0.12);
+      border-left: 3px solid var(--widm-green);
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-text);
+      display: none;
+    }
+
+    /* Question lists */
+    .questions {
+      list-style: decimal;
+      padding-left: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .questions li {
+      line-height: 1.5;
+      text-align: left;
+    }
+    .questions .options {
+      margin-top: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 320px;
+    }
+    .questions .options label {
+      display: grid;
+      grid-template-columns: 22px auto;
+      column-gap: 0.5rem;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+    }
+    .questions .options input[type="radio"] {
+      margin: 0;
+      accent-color: var(--widm-green);
+      transform: scale(1.05);
+      justify-self: flex-start;
+    }
+
+    /* Admin Panel */
+    .admin-panel {
+      background: #111;
+      border: 1px solid #333;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .admin-hidden { display: none; }
+
+    .admin-step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .admin-step {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1rem;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .admin-step .step-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--widm-green);
+      margin-bottom: 0.25rem;
+      display: inline-block;
+    }
+
+    .round-admin-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .round-admin-card {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      padding: 0.75rem;
+      background: rgba(0,0,0,0.35);
+    }
+
+    .round-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .status-pill {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .status-pill.success {
+      border-color: rgba(0,255,157,0.5);
+      color: var(--widm-green);
+    }
+    .status-pill.warn {
+      border-color: rgba(255,113,113,0.5);
+      color: #ff8787;
+    }
+
+    .round-admin-list {
+      list-style: none;
+      margin: 0.5rem 0 0.75rem;
+      padding: 0;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .round-admin-list span {
+      color: var(--widm-green);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .round-admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .secret-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .secret-summary-grid span {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--widm-muted);
+    }
+
+    .mini-btn.ghost {
+      background: transparent;
+      border-style: dashed;
+      color: var(--widm-green);
+    }
+    .mini-btn.ghost:hover {
+      background: rgba(0,255,157,0.1);
+    }
+    .mini-btn.danger {
+      border-color: #ff6565;
+      color: #ff8c8c;
+    }
+    .mini-btn.danger:hover {
+      background: #ff6565;
+      color: #000;
+    }
+
+    .text-good { color: var(--widm-green); }
+    .text-warn { color: #ff8c8c; }
+
+    /* LOCKED / COMING SOON STATE */
+    .tab-panel.locked,
+    .top-tab-panel.locked {
+      position: relative;
+      min-height: 300px;
+    }
+    .tab-panel.locked > *,
+    .top-tab-panel.locked > * {
+      opacity: 0.1;
+      pointer-events: none;
+      filter: blur(2px);
+    }
+    .tab-panel.locked .lock-overlay,
+    .top-tab-panel.locked .lock-overlay {
+      opacity: 1;
+      pointer-events: auto;
+      filter: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      background: rgba(5, 10, 8, 0.6);
+    }
+    .lock-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 3rem;
+      color: var(--widm-green);
+      text-transform: uppercase;
+      text-shadow: 0 0 20px var(--widm-green);
+      border: 4px solid var(--widm-green);
+      padding: 1rem 2rem;
+      background: rgba(0,0,0,0.8);
+      transform: rotate(-5deg);
+    }
+    .lock-sub {
+      margin-top: 1rem;
+      color: #fff;
+      font-size: 1.2rem;
+      text-shadow: 0 0 5px #000;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="container">
+      <div class="glow-circle" aria-hidden="true"></div>
+
+      <button class="admin-btn" id="admin-toggle-button" title="Docentgedeelte openen/sluiten">
+        Admin
+      </button>
+
+      <h1>
+        SECRET SANTA
+        <span>WIE IS DE MOL? · SPRINGPLANK EDITIE</span>
+      </h1>
+
+      <p class="subtitle">
+        Raad wie ik ben via vragen, hints en verdachten. Hoe scherper je oplet, hoe sneller je mij ontmaskert.
+        Maar let op: niets is wat het lijkt. Durf jij het aan?
+      </p>
+
+      <section class="intro-card">
+        <p class="intro-lead">
+          Je missie is natuurlijk mij: Target locked, <strong>Erika Schmidt</strong>. Elke vraag, elke route op de blauwdruk en elke ronde
+          is een kans om mij misschien te ontmaskeren voordat het eindspel begint. Speel scherp, want alleen wie de signalen ziet,
+          kan mijn naam op <strong>18 december</strong> luid en duidelijk onthullen.
+        </p>
+        <p class="target-line">
+          <span>Target locked:</span>
+          <strong>Erika Schmidt · klas 3b</strong>
+        </p>
+      </section>
+
+      <p class="reveal-note">
+        Het lot heeft beslist: ik ben jouw geheime gever. Iedere ronde is een nieuwe poging om mij misschien al te ontmaskeren,
+        zodat je mijn naam op <strong>18 december</strong> op het juiste moment kunt onthullen. Durf jij te ontdekken wie achter deze Secret Santa zit?
+      </p>
+
+      <section class="intro-brief">
+        <h3>Hoe speel je dit spel?</h3>
+        <p>
+          Op de hoofdpagina zie je de verdachtenlijst. Zet een vinkje bij de mensen die je niet langer verdenkt
+          en maak ondertussen notities van verdachte situaties. Tijdens onze tijd samen onderzoek je mijn hints en
+          de vragen in de rondes om te ontdekken wie ik <em>niet</em> ben – zo elimineer je stap voor stap de verkeerde namen.
+        </p>
+        <ul>
+          <li><strong>Ronde 1</strong>: speel voor het eerste cadeau. Elke juiste vraag versnelt wanneer je het pakket mag claimen.</li>
+          <li><strong>Verdachten selecteren</strong>: hoe meer vragen je aandurft, hoe beter je het profiel van de Secret Santa vormt – en hoe groter de kans op een cryptische hint.</li>
+          <li><strong>Ronde 2</strong>: opnieuw wachten er vragen én een verrassingscadeau. Een hoge score betekent dat het sneller jouw kant op komt.</li>
+          <li><strong>Finale</strong>: na drie rondes waag je één definitieve gok naar naam én verstopplek. Op <strong>18 december</strong> hoor je of je gelijk hebt.</li>
+        </ul>
+        <p>
+          Er zijn dus drie rondes, drie cadeaus en maar één blauwdruk: de kaart blijft hetzelfde, maar jullie tempo bepaalt hoe lang het duurt voordat je op de juiste plek staat.
+          Blijf scherp, want wie traag antwoordt, moet langer wachten voordat de route open gaat.
+        </p>
+        <p>
+          Na de finale ligt de waarheid klaar. Heb je de meeste vragen meegepakt en de verdachte slim gekozen, dan heb je het geheime Santa-profiel in handen nog vóór de onthulling.
+        </p>
+        <p class="story-callout">
+          Niets is wat het lijkt – een Secret-Santa-versie van Wie is de Mol. Bereid je voor, want op <strong>18 december</strong> volgt het eindspel.
+        </p>
+      </section>
+
+      <!-- Top-level nav -->
+      <div class="top-tabs">
+        <button class="top-tab-button active" data-top-tab="suspects">Verdachten</button>
+        <button class="top-tab-button" data-top-tab="round1">Ronde 1</button>
+        <button class="top-tab-button" data-top-tab="round2">Ronde 2</button>
+        <button class="top-tab-button" data-top-tab="round3">Finale</button>
+      </div>
+
+      <!-- TAB 1: VERDACHTEN -->
+      <section class="top-tab-panel active" id="suspects">
+        <section class="people-section">
+            <div class="people-header">
+              <div>
+                <div class="small-label">Deelnemers</div>
+                <h2 class="round-title">Verdachtenlijst &amp; Notities</h2>
+              </div>
+              <button type="button" class="mini-btn" id="reset-people-btn">Verdachten resetten</button>
+            </div>
+            <p class="hint-text">
+              Klik een naam aan om iemand als “afgevallen” aan te strepen. Gebruik het notitieveld voor aantekeningen.
+            </p>
+            <div class="people-grid" id="suspects-container">
+              <!-- Content generated by JS -->
+            </div>
+        </section>
+      </section>
+
+      <!-- TAB 2: RONDE 1 -->
+      <section class="top-tab-panel" id="round1">
+          <h3 class="round-title">Ronde 1 – Sinterklaas &amp; School Puzzel</h3>
+          
+          <div class="inner-tabs" style="margin-bottom: 1rem; display:flex; gap:1rem;">
+            <button class="mini-btn active" id="btn-r1-q" onclick="showRoundSubTab('r1', 'questions')">1. Puzzels &amp; Vragen</button>
+            <button class="mini-btn" id="btn-r1-m" onclick="showRoundSubTab('r1', 'map')">2. De Kaart</button>
+          </div>
+
+          <!-- Sub-tab: Questions -->
+          <div id="r1-questions-panel">
+            <p class="assignment">
+              <strong>Opdracht:</strong> Los de puzzels op. Hebben jullie genoeg antwoorden goed? Dan mag je op de kaart kijken!
+            </p>
+            <ol class="questions" id="r1-questions">
+              <!-- Generated by JS -->
+            </ol>
+            <div class="round-suspect-picker">
+              <div class="picker-header">
+                <span>Verdachtenselectie – kies maximaal 15 namen</span>
+                <span class="picker-count" id="r1-suspect-counter">0/15</span>
+              </div>
+              <p class="hint-text">Selecteer hier de collega's die jij verdacht vindt. Als de echte Secret Santa ertussen staan, verschijnt een locatiehint.</p>
+              <div class="suspect-pick-grid" id="r1-suspect-grid"></div>
+              <div class="round-hint-chip" id="r1-hint-chip"></div>
+            </div>
+          </div>
+
+          <!-- Sub-tab: Map Placeholder -->
+          <div id="r1-map-panel" style="display:none;">
+             <div class="map-placeholder-target" data-round="r1"></div>
+          </div>
+      </section>
+
+      <!-- TAB 3: RONDE 2 -->
+      <section class="top-tab-panel" id="round2">
+          <h3 class="round-title">Ronde 2 – Observatie &amp; Gedrag</h3>
+          
+          <div class="inner-tabs" style="margin-bottom: 1rem; display:flex; gap:1rem;">
+            <button class="mini-btn active" id="btn-r2-q" onclick="showRoundSubTab('r2', 'questions')">1. Puzzels &amp; Vragen</button>
+            <button class="mini-btn" id="btn-r2-m" onclick="showRoundSubTab('r2', 'map')">2. De Kaart</button>
+          </div>
+
+          <div id="r2-questions-panel">
+            <p class="assignment">
+               Nieuwe aanwijzingen en observaties.
+            </p>
+            <ol class="questions" id="r2-questions"></ol>
+            <div class="round-suspect-picker">
+              <div class="picker-header">
+                <span>Verdachtenselectie – kies maximaal 10 namen</span>
+                <span class="picker-count" id="r2-suspect-counter">0/10</span>
+              </div>
+              <p class="hint-text">Verklein jullie lijst. Hoe beter jullie schatten, hoe sneller de locatiehint opduikt.</p>
+              <div class="suspect-pick-grid" id="r2-suspect-grid"></div>
+              <div class="round-hint-chip" id="r2-hint-chip"></div>
+            </div>
+          </div>
+
+          <div id="r2-map-panel" style="display:none;">
+             <div class="map-placeholder-target" data-round="r2"></div>
+          </div>
+      </section>
+
+      <!-- TAB 4: FINALE -->
+      <section class="top-tab-panel" id="round3">
+          <h3 class="round-title">Ronde 3 – Finale</h3>
+          <div id="r3-questions-panel">
+            <p class="assignment">
+               De ontknoping!
+            </p>
+            <ol class="questions" id="r3-questions"></ol>
+            <div class="round-suspect-picker">
+              <div class="picker-header">
+                <span>Laatste selectie – kies maximaal 5 namen</span>
+                <span class="picker-count" id="r3-suspect-counter">0/5</span>
+              </div>
+              <p class="hint-text">Nu gaat het om de finale vermoedens. Raak je de juiste collega, dan licht de hint direct op.</p>
+              <div class="suspect-pick-grid" id="r3-suspect-grid"></div>
+              <div class="round-hint-chip" id="r3-hint-chip"></div>
+            </div>
+          </div>
+      </section>
+
+      <!-- HIDDEN MAP COMPONENT (Will be moved around) -->
+      <div id="movable-map-root" style="display:none;">
+          <section class="map-section">
+            <div class="small-label">Blauwdruk</div>
+            <h2 class="round-title">Blauwdruk van de school</h2>
+            <div class="map-toolbar" style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
+              <button type="button" class="mini-btn" id="map-place-markers-btn" style="display:none;">Markers plaatsen (Admin)</button>
+            </div>
+            <div class="map-container">
+              <div class="map" id="map-grid">
+                <!-- Generated by JS -->
+              </div>
+            </div>
+
+            <div id="hints-container" class="hints-container">
+              <!-- Generated by JS -->
+            </div>
+          </section>
+      </div>
+
+      <!-- ADMIN-PANEEL (verborgen achter subtiele knop) -->
+      <div id="admin-panel-wrapper" class="admin-hidden">
+        <section class="admin-panel">
+          <div class="admin-step-grid">
+            <section class="admin-step" id="tab-quick-toggle-block">
+              <div class="step-label">Stap 1</div>
+              <h3>Rondes &amp; toegang</h3>
+              <p class="admin-note">Zet open wat de spelers mogen zien. Admin-modus blijft altijd alles tonen, maar voor leerlingen geldt wat je hier instelt.</p>
+              <div class="tab-toggle-list">
+                <div class="tab-toggle-item" data-tab-card="round2">
+                  <div class="tab-toggle-info">
+                    <div class="tab-toggle-title">Ronde 2</div>
+                    <div class="tab-toggle-helper" data-lock-msg="round2">Ontgrendel wanneer de startpuzzel klaar is.</div>
+                  </div>
+                  <div class="tab-toggle-controls">
+                    <span class="tab-toggle-status" data-tab="round2">LOCKED</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" class="quick-tab-toggle" data-tab="round2">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="tab-toggle-item" data-tab-card="map">
+                  <div class="tab-toggle-info">
+                    <div class="tab-toggle-title">Kaart / Blauwdruk</div>
+                    <div class="tab-toggle-helper" data-lock-msg="map">Ontgrendel na voldoende goede antwoorden of tijdens demo.</div>
+                  </div>
+                  <div class="tab-toggle-controls">
+                    <span class="tab-toggle-status" data-tab="map">LOCKED</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" class="quick-tab-toggle" data-tab="map">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="tab-toggle-item" data-tab-card="round3">
+                  <div class="tab-toggle-info">
+                    <div class="tab-toggle-title">Finale (Ronde 3)</div>
+                    <div class="tab-toggle-helper" data-lock-msg="round3">Laat pas zien zodra ronde 2 is afgerond.</div>
+                  </div>
+                  <div class="tab-toggle-controls">
+                    <span class="tab-toggle-status" data-tab="round3">LOCKED</span>
+                    <label class="toggle-switch">
+                      <input type="checkbox" class="quick-tab-toggle" data-tab="round3">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="admin-step" id="round-admin-dashboard">
+              <div class="step-label">Stap 2</div>
+              <h3>Kaart &amp; hints monitor</h3>
+              <p class="admin-note">Check in één oogopslag of de kaart klaarstaat, of een winnaar is gemarkeerd en welke hints al zijn vrijgespeeld.</p>
+              <div class="round-admin-cards">
+                <article class="round-admin-card" data-round-card="r1">
+                  <div class="round-card-header">
+                    <span>Ronde 1 · Startpuzzel</span>
+                    <span class="status-pill" data-round-unlock-chip="r1">Kaart: <span data-admin-map-state="r1">LOCKED</span></span>
+                  </div>
+                  <ul class="round-admin-list">
+                    <li>Markers geplaatst: <span data-admin-marker-count="r1">0/6</span></li>
+                    <li>Winnaar ingesteld: <span data-admin-winner-flag="r1">Nee</span></li>
+                    <li>Volgende hintcode: <span data-admin-next-code="r1">—</span></li>
+                    <li>Hint vrijgespeeld: <span data-admin-hint-earned="r1">Nog niet</span></li>
+                    <li>Juiste verdachte aangevinkt: <span data-admin-target-hit="r1">Nee</span></li>
+                    <li>Snippet: <span data-admin-hint-preview="r1">—</span></li>
+                  </ul>
+                  <div class="round-admin-actions">
+                    <button type="button" class="mini-btn ghost" data-admin-map-round="r1">Kaart &amp; markers</button>
+                    <button type="button" class="mini-btn ghost" data-admin-hint-round="r1">Hints beheren</button>
+                    <button type="button" class="mini-btn danger" data-admin-reset-hint="r1">Hint resetten</button>
+                  </div>
+                </article>
+                <article class="round-admin-card" data-round-card="r2">
+                  <div class="round-card-header">
+                    <span>Ronde 2 · Observatie</span>
+                    <span class="status-pill" data-round-unlock-chip="r2">Finale: <span data-admin-next-unlock="r2">LOCKED</span></span>
+                  </div>
+                  <ul class="round-admin-list">
+                    <li>Markers geplaatst: <span data-admin-marker-count="r2">0/6</span></li>
+                    <li>Winnaar ingesteld: <span data-admin-winner-flag="r2">Nee</span></li>
+                    <li>Volgende hintcode: <span data-admin-next-code="r2">—</span></li>
+                    <li>Hint vrijgespeeld: <span data-admin-hint-earned="r2">Nog niet</span></li>
+                    <li>Juiste verdachte aangevinkt: <span data-admin-target-hit="r2">Nee</span></li>
+                    <li>Snippet: <span data-admin-hint-preview="r2">—</span></li>
+                  </ul>
+                  <div class="round-admin-actions">
+                    <button type="button" class="mini-btn ghost" data-admin-map-round="r2">Kaart &amp; markers</button>
+                    <button type="button" class="mini-btn ghost" data-admin-hint-round="r2">Hints beheren</button>
+                    <button type="button" class="mini-btn danger" data-admin-reset-hint="r2">Hint resetten</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="admin-step" id="secret-target-block">
+              <div class="step-label">Stap 3</div>
+              <h3>Secret Santa aanwijzen</h3>
+              <p class="admin-note">
+                Kies hier welke collega in deze editie de geheime gever is en schrijf een cryptische hint. Leerlingen zien de hint alleen als ze de juiste verdachte selecteren.
+              </p>
+              <div class="secret-summary-grid">
+                <div>
+                  <span>Huidig doelwit</span>
+                  <strong id="secret-target-name-display">—</strong>
+                </div>
+                <div>
+                  <span>Hintstatus</span>
+                  <strong id="secret-hint-status">Nog niet verstuurd</strong>
+                </div>
+              </div>
+              <label>
+                Selecteer de geheime verdachte:
+                <select class="admin-input" id="secret-target-select"></select>
+              </label>
+              <label>
+                Fluisterhint (houd het mysterieus):
+                <textarea class="admin-textarea" id="secret-hint-input" placeholder="Bijv. 'Je keuze loopt synchroon met mijn route, maar spreek mijn naam niet uit.'" rows="3"></textarea>
+              </label>
+              <div class="story-callout" id="secret-hint-preview" style="margin-top:0.5rem;">
+                Molbericht verschijnt hier.
+              </div>
+              <div style="margin-top:0.8rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button type="button" class="mini-btn" id="secret-target-save">Opslaan</button>
+                <button type="button" class="mini-btn" id="secret-target-random">Kies iemand anders</button>
+              </div>
+            </section>
+          </div>
+
+          <div class="admin-block" style="margin-bottom: 1.5rem; border-bottom: 1px dashed rgba(148,168,159,0.5); padding-bottom: 1rem;">
+            <h3>Instellingen &amp; Beheer</h3>
+            <p class="admin-note">Pas hier de vragen en verdachten aan. Wijzigingen worden lokaal opgeslagen.</p>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="mini-btn" id="admin-edit-questions-btn">Bewerk Vragen</button>
+              <button type="button" class="mini-btn" id="admin-edit-suspects-btn">Bewerk Verdachten</button>
+              <button type="button" class="mini-btn" id="admin-edit-map-btn">Bewerk Plattegrond</button>
+              <button type="button" class="mini-btn" id="admin-edit-hints-btn">Bewerk Hints</button>
+              <button type="button" class="mini-btn" id="admin-edit-tabs-btn">Beheer Tabbladen</button>
+              <button type="button" class="mini-btn" id="admin-reset-data-btn" style="border-color: #ff4141; color: #ff4141;">Reset Alles</button>
+            </div>
+            
+            <!-- Editor Container (Hidden by default) -->
+            <div id="admin-editor-container" style="display: none; margin-top: 1rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
+              <h4 id="admin-editor-title" style="margin-top: 0; color: var(--widm-green);">Editor</h4>
+              <div id="admin-editor-content"></div>
+              <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <button type="button" class="mini-btn" id="admin-save-btn">Opslaan</button>
+                <button type="button" class="mini-btn" id="admin-cancel-btn">Annuleren</button>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- DATA & STATE ---
+    const MAP_ROUNDS = ['r1', 'r2'];
+    const DEFAULT_SECRET_HINT = "Molbericht: je keuze maakt mijn route zichtbaar, maar mijn naam blijft in de schaduw.";
+
+    const mapHintTemplates = {
+      r1: [
+        { id: 'r1-h1', text: "Vertrek bij Erika's klas en volg de kortste route naar een ruimte waar veel volwassenen komen.", locked: false, code: "" },
+        { id: 'r1-h2', text: "De verstopplek ligt dichter bij de gezelligste koffiemok dan bij het schoolplein.", locked: true, code: "KOFFIE" },
+        { id: 'r1-h3', text: "Je hoeft geen trap op of af: alles speelt zich op hetzelfde niveau af.", locked: true, code: "TRAP" },
+        { id: 'r1-h4', text: "Kinderen lopen er vaak langs, maar staan er bijna nooit écht stil.", locked: true, code: "GANG" }
+      ],
+      r2: [
+        { id: 'r2-h1', text: "Bewakingsbeelden tonen dat de mol steeds langs dezelfde ruimte sluipt.", locked: false, code: "" },
+        { id: 'r2-h2', text: "Je vindt de plek eerder bij de leeshoek dan bij de gymzaal.", locked: true, code: "LEES" },
+        { id: 'r2-h3', text: "Let op de plek waar teamleden snel overleg voeren zonder stoelen te pakken.", locked: true, code: "TEAM" },
+        { id: 'r2-h4', text: "Er hangt een opvallende geur van koffie en stiften.", locked: true, code: "GEUR" }
+      ]
+    };
+
+    function cloneMapHints(round) {
+      const template = mapHintTemplates[round] || mapHintTemplates.r1;
+      return template.map(hint => ({ ...hint }));
+    }
+
+    function createDefaultRoundMap(round) {
+      return {
+        mapImage: 'image.png',
+        mapRotation45: true,
+        markers: [],
+        hints: cloneMapHints(round)
+      };
+    }
+
+    const defaultData = {
+      roundMaps: {
+        r1: createDefaultRoundMap('r1'),
+        r2: createDefaultRoundMap('r2')
+      },
+      mapLayout: [
+        // 10x10 grid approximation of the school shape
+        // 0=empty, 1=hallway, 2=room, 3=start
+        {type:0},{type:0},{type:0},{type:2,label:"Lokaal"},{type:2,label:"Lokaal"},{type:0},{type:0},{type:0},{type:0},{type:0},
+        {type:0},{type:0},{type:0},{type:1},{type:1},{type:0},{type:0},{type:0},{type:0},{type:0},
+        {type:2,label:"Gymzaal"},{type:1},{type:1},{type:1},{type:1},{type:1},{type:2,label:"Lokaal"},{type:0},{type:0},{type:0},
+        {type:2,label:"Gymzaal"},{type:1},{type:2,label:"Teamkamer"},{type:1},{type:1},{type:1},{type:1},{type:2,label:"Lokaal"},{type:0},{type:0},
+        {type:0},{type:1},{type:1},{type:1},{type:1},{type:1},{type:1},{type:1},{type:2,label:"Lokaal"},{type:0},
+        {type:0},{type:0},{type:0},{type:3,label:"Erika's Klas"},{type:1},{type:1},{type:1},{type:1},{type:1},{type:0},
+        {type:0},{type:0},{type:0},{type:2,label:"Lokaal"},{type:1},{type:1},{type:1},{type:1},{type:0},{type:0},
+        {type:0},{type:0},{type:0},{type:0},{type:2,label:"Ingang"},{type:0},{type:0},{type:0},{type:0},{type:0}
+      ],
+      suspects: [
+        { name: "Judith de Jong", role: "Leerkracht groep 1/2a en 3a", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b9/33/b933debe-4a9c-407d-8d83-9f6cd8a01207/spr12a091335.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Nicolette Vintges", role: "Leerkracht groep 1/2a", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b3/4a/b34a76b2-cd86-441b-9dbd-33eb007c04e2/spr03a091307.jpg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Sanne Duivenvoorden", role: "Leerkracht groep 1/2b en gedragspecialist", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b5/7b/b57bf4b6-a547-486e-9107-bd158edfe698/spr12b095602.jpeg__300x520_q100_crop_subsampling-2.jpg", isTarget: true },
+        { name: "Lotte Guldemond", role: "Leerkracht groep 1/2b", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b7/e5/b7e5db1f-92f4-4ffd-91d9-f0e661ff2bd6/foto_lot_2.jpg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Martine Dekker", role: "Leerkracht groep 1/2c", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/f2/f0/f2f046ec-55b8-40ed-8a9b-8e3434591ce6/spr12c080853.jpg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Anne Vos", role: "Leerkracht groep 1/2c", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/59/f6/59f61878-8a8e-4c36-8f43-55da1fbd50d5/spr12c101814.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Conchita Hoogduin", role: "Leerkracht groep 3a", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/0d/41/0d4197f6-f1c8-4208-9938-61a168eb4bbb/spr04a110738.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Erika Schmidt", role: "Leerkracht groep 3b", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/4b/3b/4b3b092a-ca91-4e88-8e99-49a69a1d1319/spr003104618.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Lianne Koster", role: "Leerkracht groep 3b en 8", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/0a/fb/0afbca8e-553f-4a32-b47c-99eb59613314/spr005114420.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Camille Hermans", role: "Leerkracht groep 4", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/8c/53/8c53706c-cec7-42f7-aab7-1dffdf567053/spr04b112048.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Robin van Leeuwen", role: "Leerkracht groep 4 en hoogbegaafdheidsspecialist", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/f6/c1/f6c14157-f41a-4227-9b82-e77bef1ceac4/spr12b094258.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Anouk van der Bent", role: "Leerkracht groep 5a", img: "" },
+        { name: "Sam Pieterse", role: "Leerkracht groep 5a en 6", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/5b/78/5b78e7a9-d58c-4bcc-917f-980e3ee77525/spr008124754.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Marieke Brokaar", role: "Leerkracht groep 5b", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/83/5b/835bfba3-d9e7-4cbd-9fb8-9317c9bf67f5/spr005114354.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Ingeborg van Niekerk", role: "Leerkracht groep 5b", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/61/b2/61b2be7f-d5ea-4ffd-8230-14291608b0a6/spr006103600.jpg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Manon Houthoff", role: "Leerkracht groep 6 en taalspecialist", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/62/ad/62ad15bf-538b-4b40-9d0c-8e73d9b53554/spr008123957.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Lindy Gomes", role: "Leerkracht groep 7", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/ae/85/ae853315-3af2-42d0-b28d-5cd4a33b5a9e/spr007130833.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Johan Koot", role: "Leerkracht groep 8", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/52/0f/520fe595-72f1-47e6-99f7-667a9555c309/foto_johan_koot.jpg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Luuk Heemskerk", role: "Onderwijsassistent", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/07/ec/07ec7097-03cb-4d5e-80cf-e0b58a59b7ab/spr006115213.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Ingrid Wijnands", role: "Administratief medewerker", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b0/d9/b0d95a04-bf21-4600-8e85-932c2293fdf4/spr007125906.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Mariska Heemskerk", role: "Eventmanager", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b4/a0/b4a07be2-5459-4d75-843f-434a808b3df7/spr12c100226.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Anita van der Zon", role: "Directeur", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/39/aa/39aafca6-2dd2-4ada-afaf-c76461da2625/sprfam090826.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Floor Louwers", role: "Adjunct-directeur", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/30/fb/30fb9d21-ebea-421e-937b-6e053921897c/sprfam090857.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Amber de Winter", role: "Intern begeleider", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/e0/17/e0176041-2edf-4b34-b792-39b634fa7b89/spr006115810.jpeg__300x520_q100_crop_subsampling-2.jpg" },
+        { name: "Mark Korteweg", role: "Conciërge", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/7a/f9/7af907d6-7808-4213-9d0d-7b3a5bd6e5cf/spr006120354.jpeg__300x520_q100_crop_subsampling-2.jpg" }
+      ],
+      questions: {
+        r1: [
+          { id: "q1", text: "Hoeveel kinderen heeft de Secret Santa in de klas?", type: "open", correctAnswer: "25" },
+          { id: "q2", text: "Hoe vaak komen jullie elkaar tegen op een werkdag?", type: "radio", options: ["Zelden", "Soms", "Vaak", "Elk uur"], correctAnswer: "Vaak" },
+          { id: "q3", text: "Hoe laat komt deze collega meestal binnen?", type: "open", correctAnswer: "08:00" },
+          { id: "q4", text: "Welke hobby of sport beoefent deze collega?", type: "open", correctAnswer: "Tennis" }
+        ],
+        r2: [
+          { id: "q5", text: "Wat is de favoriete snack van deze collega?", type: "open", correctAnswer: "Chocolade" }
+        ],
+        r3: [
+          { id: "q8", text: "Wie is jouw hoofdverdachte?", type: "open" },
+          { id: "q10", text: "Kies één combinatie: wie + plek vind jij het meest logisch?", type: "complex" }
+        ]
+      },
+      // Visibility flags for tabs
+      tabVisibility: {
+        home: true,
+        round2: false,  // Locked
+        map: false,     // Locked initially
+        round3: false   // Locked
+      },
+      roundGuesses: {
+        r1: [],
+        r2: [],
+        r3: []
+      },
+      roundHints: {
+        r1: null,
+        r2: null,
+        r3: null
+      },
+      round1Complete: false,
+      round2Complete: false,
+      secretSanta: {
+        name: '',
+        hint: DEFAULT_SECRET_HINT
+      }
+    };
+
+    let appData = JSON.parse(localStorage.getItem('secretSantaData_v5_2')) || defaultData;
+
+    function ensureRoundMapStructure(data) {
+      if (!data.roundMaps) {
+        data.roundMaps = {};
+      }
+      MAP_ROUNDS.forEach(round => {
+        if (!data.roundMaps[round]) {
+          data.roundMaps[round] = createDefaultRoundMap(round);
+        } else {
+          if (!Array.isArray(data.roundMaps[round].markers)) {
+            data.roundMaps[round].markers = [];
+          }
+          if (!Array.isArray(data.roundMaps[round].hints)) {
+            data.roundMaps[round].hints = cloneMapHints(round);
+          }
+          if (!data.roundMaps[round].mapImage) {
+            data.roundMaps[round].mapImage = 'image.png';
+          }
+          if (data.roundMaps[round].mapRotation45 === undefined) {
+            data.roundMaps[round].mapRotation45 = true;
+          }
+        }
+      });
+
+      if (Array.isArray(data.markers) && data.markers.length && (!data.roundMaps.r1.markers || data.roundMaps.r1.markers.length === 0)) {
+        data.roundMaps.r1.markers = data.markers;
+      }
+      if (Array.isArray(data.hints) && data.hints.length && (!data.roundMaps.r1.hints || data.roundMaps.r1.hints.length === 0)) {
+        data.roundMaps.r1.hints = data.hints;
+      }
+      if (data.mapImage && !data.roundMaps.r1.mapImage) {
+        data.roundMaps.r1.mapImage = data.mapImage;
+      }
+      if (data.mapRotation45 !== undefined && data.roundMaps.r1.mapRotation45 === undefined) {
+        data.roundMaps.r1.mapRotation45 = data.mapRotation45;
+      }
+    }
+
+    ensureRoundMapStructure(appData);
+
+    let activeMapRound = 'r1';
+
+    function normalizeMapRound(round) {
+      return MAP_ROUNDS.includes(round) ? round : 'r1';
+    }
+
+    function setActiveMapRound(round) {
+      activeMapRound = normalizeMapRound(round);
+    }
+
+    function getActiveMapRound() {
+      return normalizeMapRound(activeMapRound);
+    }
+
+    function normalizeHintRound(round) {
+      const allowed = ['r1', 'r2', 'r3'];
+      return allowed.includes(round) ? round : 'r1';
+    }
+
+    function getFriendlyRoundLabel(round) {
+      switch (round) {
+        case 'r1':
+          return 'Ronde 1';
+        case 'r2':
+          return 'Ronde 2';
+        case 'r3':
+          return 'Finale';
+        default:
+          return 'deze ronde';
+      }
+    }
+
+    function getMapState(round) {
+      const key = normalizeMapRound(round || getActiveMapRound());
+      ensureRoundMapStructure(appData);
+      return appData.roundMaps[key];
+    }
+
+    function getMapMarkers(round) {
+      return getMapState(round).markers;
+    }
+
+    function getMapHints(round) {
+      return getMapState(round).hints;
+    }
+
+    function getSecretSantaName() {
+      ensureSecretSantaConfig();
+      return appData.secretSanta.name || '';
+    }
+
+    function getSecretHintMessage() {
+      ensureSecretSantaConfig();
+      return appData.secretSanta.hint || DEFAULT_SECRET_HINT;
+    }
+
+    // Migration for roundHints
+    if (!appData.roundHints) {
+       appData.roundHints = JSON.parse(JSON.stringify(defaultData.roundHints));
+    }
+
+     // Migration for suspect guesses
+     if (!appData.roundGuesses) {
+       appData.roundGuesses = JSON.parse(JSON.stringify(defaultData.roundGuesses));
+     }
+
+    // Migration for existing data without tabVisibility
+    if (!appData.tabVisibility || !appData.tabVisibility.home) {
+       appData.tabVisibility = JSON.parse(JSON.stringify(defaultData.tabVisibility));
+    }
+    // Remove legacy round location assignments
+    if (appData.roundLocations) {
+       delete appData.roundLocations;
+    }
+     // Ensure suspects exist (older saves could wipe them)
+     if (!Array.isArray(appData.suspects) || !appData.suspects.some(person => person && person.name)) {
+       appData.suspects = JSON.parse(JSON.stringify(defaultData.suspects));
+     }
+     // Ensure question sets exist per round
+     if (!appData.questions || !appData.questions.r1 || !appData.questions.r2 || !appData.questions.r3) {
+       appData.questions = JSON.parse(JSON.stringify(defaultData.questions));
+     }
+
+      ['r1','r2','r3'].forEach(round => {
+        if (!appData.questions[round]) return;
+        appData.questions[round].forEach(q => {
+          if (q && q.hasOpen) {
+            delete q.hasOpen;
+          }
+        });
+      });
+
+    ensureSecretSantaConfig();
+    function ensureSecretSantaConfig() {
+      if (!appData.secretSanta) {
+        const initialTarget = appData.suspects.find(person => person.isTarget);
+        appData.secretSanta = {
+          name: initialTarget ? initialTarget.name : '',
+          hint: DEFAULT_SECRET_HINT
+        };
+      }
+      if (!appData.secretSanta.hint) {
+        appData.secretSanta.hint = DEFAULT_SECRET_HINT;
+      }
+      if (!appData.secretSanta.name) {
+        const fallbackTarget = appData.suspects.find(person => person.isTarget);
+        if (fallbackTarget) {
+          appData.secretSanta.name = fallbackTarget.name;
+        }
+      }
+    }
+
+    if (appData.round1Complete === undefined) {
+      appData.round1Complete = false;
+    }
+    if (appData.round2Complete === undefined) {
+      appData.round2Complete = false;
+    }
+
+    const suspectSelectionLimits = { r1: 15, r2: 10, r3: 5 };
+    const MAP_MARKER_LIMIT = 6;
+    const SHOW_BLUEPRINT_BLOCKS = false; // legacy grid tiles stay disabled unless explicitly re-enabled
+    let markerEditReminderShown = false;
+    let draggingMarkerIndex = null;
+    let draggingMarkerElement = null;
+    let draggingMapElement = null;
+    let draggingMoved = false;
+    let draggingPointerId = null;
+    let dragMapRect = null;
+    let draggingRound = null;
+    let editorMapRound = 'r1';
+    let editorHintRound = 'r1';
+
+    function isAdminMode() {
+      return document.body.classList.contains('admin-mode');
+    }
+
+    function isAdminPanelVisible() {
+      const wrapper = document.getElementById('admin-panel-wrapper');
+      return wrapper ? !wrapper.classList.contains('admin-hidden') : false;
+    }
+
+    function initQuickTabToggles() {
+      const toggles = document.querySelectorAll('.quick-tab-toggle');
+      if (!toggles.length) return;
+      toggles.forEach(toggle => {
+        toggle.addEventListener('change', () => {
+          const tab = toggle.dataset.tab;
+          if (!tab) return;
+          const desiredState = toggle.checked;
+
+          if (!canToggleTab(tab, desiredState)) {
+            syncQuickTabToggles();
+            showTabLockWarning(tab);
+            return;
+          }
+
+          appData.tabVisibility[tab] = desiredState;
+          saveData({ skipRender: true });
+          applyTabLocks();
+          updateSubTabButtons();
+          updateTabToggleStatuses();
+        });
+      });
+      syncQuickTabToggles();
+      updateTabToggleStatuses();
+    }
+
+    function syncQuickTabToggles() {
+      const toggles = document.querySelectorAll('.quick-tab-toggle');
+      if (!toggles.length) return;
+      toggles.forEach(toggle => {
+        const tab = toggle.dataset.tab;
+        if (!tab) return;
+        toggle.checked = !!appData.tabVisibility[tab];
+      });
+    }
+
+    function canToggleTab(tab, desiredState) {
+      const wantUnlock = desiredState === undefined ? true : desiredState;
+      if (!wantUnlock) return true;
+      if (tab === 'round2' && !appData.round1Complete) {
+        return false;
+      }
+      if (tab === 'round3' && !appData.round2Complete) {
+        return false;
+      }
+      return true;
+    }
+
+    function showTabLockWarning(tab) {
+      let message = '';
+      if (tab === 'round2') {
+        message = 'Ronde 2 blijft vergrendeld totdat ronde 1 succesvol is afgerond.';
+      } else if (tab === 'round3') {
+        message = 'De finale wordt pas zichtbaar nadat ronde 2 is afgerond.';
+      }
+      if (message) alert(message);
+    }
+
+    function updateTabToggleStatuses() {
+      const badges = document.querySelectorAll('.tab-toggle-status');
+      badges.forEach(badge => {
+        const tab = badge.dataset.tab;
+        if (!tab) return;
+        const unlocked = !!appData.tabVisibility[tab];
+        badge.textContent = unlocked ? 'ONTSLOTEN' : 'LOCKED';
+        badge.classList.toggle('status-on', unlocked);
+      });
+
+      const cards = document.querySelectorAll('[data-tab-card]');
+      cards.forEach(card => {
+        const tab = card.dataset.tabCard;
+        if (!tab) return;
+        const unlocked = !!appData.tabVisibility[tab];
+        card.classList.toggle('locked', !unlocked);
+        const helper = card.querySelector('[data-lock-msg]');
+        if (helper) {
+          helper.textContent = getLockMessage(tab, unlocked);
+        }
+      });
+    }
+
+    function getLockMessage(tab, unlocked) {
+      if (tab === 'round2') {
+        if (!unlocked && !appData.round1Complete) {
+          return 'Locked: Ronde 1 moet eerst gehaald worden.';
+        }
+        return unlocked ? 'Ontgrendeld voor deelname.' : 'Handmatig vergrendeld.';
+      }
+      if (tab === 'map') {
+        return unlocked ? 'Kaart staat open.' : 'Locked: kaart speelt vrij via goede antwoorden of admin.';
+      }
+      if (tab === 'round3') {
+        if (!unlocked && !appData.round2Complete) {
+          return 'Locked: Ronde 2 afronden voordat de finale start.';
+        }
+        return unlocked ? 'Finale zichtbaar.' : 'Handmatig vergrendeld.';
+      }
+      return '';
+    }
+
+    function getPlayerFacingLockMessage(tab) {
+      if (tab === 'round2') {
+        return 'Ronde 2 gaat open zodra jullie Ronde 1 hebben gehaald.';
+      }
+      if (tab === 'round3') {
+        return 'De finale verschijnt pas nadat Ronde 2 is afgerond.';
+      }
+      return 'Dit onderdeel is nog vergrendeld.';
+    }
+
+    function isTopTabAccessible(tabId) {
+      if (isAdminMode()) return true;
+      if (tabId === 'round2') return !!appData.tabVisibility.round2;
+      if (tabId === 'round3') return !!appData.tabVisibility.round3;
+      return true;
+    }
+
+    function setActiveTopTab(tabId) {
+      const buttons = document.querySelectorAll('.top-tab-button');
+      const panels = document.querySelectorAll('.top-tab-panel');
+      buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.topTab === tabId);
+      });
+      panels.forEach(panel => {
+        panel.classList.toggle('active', panel.id === tabId);
+      });
+    }
+
+    function findFirstUnlockedTopTab() {
+      const order = ['suspects', 'round1', 'round2', 'round3'];
+      for (const tabId of order) {
+        if (isTopTabAccessible(tabId)) {
+          return tabId;
+        }
+      }
+      return 'suspects';
+    }
+
+    function ensurePanelLockOverlay(panel, message) {
+      if (!panel) return;
+      let overlay = panel.querySelector('.lock-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'lock-overlay';
+        const lockText = document.createElement('div');
+        lockText.className = 'lock-text';
+        lockText.textContent = 'LOCKED';
+        const lockSub = document.createElement('div');
+        lockSub.className = 'lock-sub';
+        lockSub.textContent = message || '';
+        overlay.appendChild(lockText);
+        overlay.appendChild(lockSub);
+        panel.appendChild(overlay);
+      } else {
+        const lockSub = overlay.querySelector('.lock-sub');
+        if (lockSub) {
+          lockSub.textContent = message || '';
+        }
+      }
+    }
+
+    function clearPanelLockOverlay(panel) {
+      if (!panel) return;
+      const overlay = panel.querySelector('.lock-overlay');
+      if (overlay) {
+        overlay.remove();
+      }
+    }
+
+    function ensureActiveTabAccessible() {
+      const activePanel = document.querySelector('.top-tab-panel.active');
+      if (!activePanel) return;
+      const tabId = activePanel.id;
+      if (isTopTabAccessible(tabId)) return;
+      const fallback = findFirstUnlockedTopTab();
+      setActiveTopTab(fallback);
+    }
+
+    function applyTabLocks() {
+      const lockableTabs = ['round2', 'round3'];
+      const isAdmin = isAdminMode();
+      lockableTabs.forEach(tabId => {
+        const button = document.querySelector(`.top-tab-button[data-top-tab="${tabId}"]`);
+        const panel = document.getElementById(tabId);
+        if (!button || !panel) return;
+        const unlocked = isTopTabAccessible(tabId);
+        const message = getPlayerFacingLockMessage(tabId);
+        button.dataset.lockMessage = message;
+        button.classList.toggle('locked-tab', !unlocked);
+        if (!unlocked) {
+          button.setAttribute('aria-disabled', 'true');
+          button.title = message;
+          panel.classList.add('locked');
+          ensurePanelLockOverlay(panel, message);
+        } else {
+          button.removeAttribute('aria-disabled');
+          button.removeAttribute('title');
+          panel.classList.remove('locked');
+          clearPanelLockOverlay(panel);
+        }
+      });
+
+      if (!isAdmin) {
+        ensureActiveTabAccessible();
+      }
+    }
+
+    function openAdminPanel() {
+      const wrapper = document.getElementById('admin-panel-wrapper');
+      const btn = document.getElementById('admin-toggle-button');
+      if (!wrapper || !btn) return;
+      wrapper.classList.remove('admin-hidden');
+      btn.classList.add('active');
+      document.body.classList.add('admin-mode');
+      applyTabLocks();
+      renderMap();
+      markerEditReminderShown = false;
+    }
+
+    function closeAdminPanel() {
+      const wrapper = document.getElementById('admin-panel-wrapper');
+      const btn = document.getElementById('admin-toggle-button');
+      if (!wrapper || !btn) return;
+      wrapper.classList.add('admin-hidden');
+      btn.classList.remove('active');
+      document.body.classList.remove('admin-mode');
+      applyTabLocks();
+      renderMap();
+      markerEditReminderShown = false;
+    }
+
+    function ensureAdminMode() {
+      if (isAdminMode()) return true;
+      const password = prompt("Voer het admin-wachtwoord in:");
+      if (password === "Admin2025") {
+        openAdminPanel();
+        const wrapper = document.getElementById('admin-panel-wrapper');
+        if (wrapper) {
+          wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        return true;
+      }
+      if (password !== null) {
+        alert("Onjuist wachtwoord!");
+      }
+      return false;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function ensureMarkerPosition(marker) {
+      if (typeof marker.relX !== 'number') {
+        if (typeof marker.x === 'number') {
+          marker.relX = (marker.x + 0.5) / 10;
+        } else {
+          marker.relX = 0.5;
+        }
+      }
+      if (typeof marker.relY !== 'number') {
+        if (typeof marker.y === 'number') {
+          marker.relY = (marker.y + 0.5) / 10;
+        } else {
+          marker.relY = 0.5;
+        }
+      }
+      marker.relX = clamp(marker.relX, 0.02, 0.98);
+      marker.relY = clamp(marker.relY, 0.02, 0.98);
+    }
+
+    function enforceMarkerRules() {
+      MAP_ROUNDS.forEach(round => {
+        const mapState = getMapState(round);
+        let markers = mapState.markers;
+        if (!Array.isArray(markers)) {
+          mapState.markers = [];
+          markers = mapState.markers;
+        }
+
+        if (markers.length > MAP_MARKER_LIMIT) {
+          const winners = markers.filter(marker => marker.status === 'winner');
+          const others = markers.filter(marker => marker.status !== 'winner');
+          mapState.markers = [...winners, ...others].slice(0, MAP_MARKER_LIMIT);
+          markers = mapState.markers;
+        }
+
+        const usedLabels = new Set();
+        markers.forEach((marker, idx) => {
+          ensureMarkerPosition(marker);
+          if (!marker.status) marker.status = 'visible';
+          let label = (marker.label || '').toString().trim();
+          if (!label) label = generateLabelFromIndex(idx);
+          label = label.toUpperCase();
+          let uniqueLabel = label;
+          let counter = 1;
+          while (usedLabels.has(uniqueLabel)) {
+            uniqueLabel = `${label}${++counter}`;
+          }
+          marker.label = uniqueLabel;
+          usedLabels.add(uniqueLabel);
+        });
+
+        if (markers.length > 0 && !markers.some(marker => marker.status === 'winner')) {
+          markers[0].status = 'winner';
+        }
+      });
+    }
+
+    function generateLabelFromIndex(index) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      return alphabet[index] || `M${index + 1}`;
+    }
+
+    function getNextMarkerLabel(round) {
+      const markers = getMapMarkers(round);
+      const existing = new Set(markers.map(marker => (marker.label || '').toUpperCase()));
+      let index = markers.length;
+      let candidate = generateLabelFromIndex(index).toUpperCase();
+      let counter = 1;
+      while (existing.has(candidate)) {
+        candidate = `${generateLabelFromIndex(index).toUpperCase()}${counter++}`;
+      }
+      return candidate;
+    }
+
+    function updateMarkerStatus(round, markerIndex, status) {
+      const markers = getMapMarkers(round);
+      if (!markers[markerIndex]) return;
+      if (status === 'winner') {
+        markers.forEach((marker, idx) => {
+          if (idx !== markerIndex && marker.status === 'winner') {
+            marker.status = 'visible';
+            const otherSelect = document.querySelector(`select[data-marker-round="${round}"][data-marker-index="${idx}"]`);
+            if (otherSelect) {
+              otherSelect.value = 'visible';
+            }
+          }
+        });
+      }
+      markers[markerIndex].status = status;
+      if (status !== 'winner' && !markers.some(marker => marker.status === 'winner')) {
+        let fallbackIndex = markers.findIndex((marker, idx) => idx !== markerIndex && marker.status !== 'eliminated');
+        if (fallbackIndex === -1) {
+          fallbackIndex = markers.findIndex((_, idx) => idx !== markerIndex);
+        }
+        if (fallbackIndex >= 0) {
+          markers[fallbackIndex].status = 'winner';
+          const fallbackSelect = document.querySelector(`select[data-marker-round="${round}"][data-marker-index="${fallbackIndex}"]`);
+          if (fallbackSelect) {
+            fallbackSelect.value = 'winner';
+          }
+        }
+      }
+      saveData({ skipRender: true });
+      renderMap();
+    }
+
+    enforceMarkerRules();
+
+    function saveData(options = {}) {
+      enforceMarkerRules();
+      localStorage.setItem('secretSantaData_v5_2', JSON.stringify(appData));
+      if (!options.skipRender) {
+        renderAll();
+      } else {
+        refreshAdminOverview();
+      }
+    }
+
+    function resetData() {
+      if(confirm("Weet je zeker dat je alles wilt resetten naar de standaardwaarden?")) {
+        appData = JSON.parse(JSON.stringify(defaultData));
+        saveData();
+      }
+    }
+
+    // --- RENDERING ---
+    function renderSuspects() {
+      const container = document.getElementById('suspects-container');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      let renderedCount = 0;
+      appData.suspects.forEach((person, index) => {
+        if (!person || !person.name) {
+          return;
+        }
+        const label = document.createElement('label');
+        label.className = 'person';
+        
+        let imgHtml = '';
+        if (person.img) {
+          imgHtml = `<img class="photo" src="${person.img}" alt="${person.name}" onerror="this.onerror=null; this.outerHTML='<div class=\\'no-photo\\'>Geen foto</div>';">`;
+        } else {
+          imgHtml = `<div class="no-photo">Geen foto</div>`;
+        }
+
+        label.innerHTML = `
+          <input type="checkbox">
+          <div class="person-content">
+            ${imgHtml}
+            <div class="text">
+              <div class="name-row">
+                <div class="name">${person.name}</div>
+              </div>
+              <div class="role">${person.role}</div>
+            </div>
+          </div>
+        `;
+        
+        // Add Note Area
+        const noteArea = document.createElement('textarea');
+        noteArea.className = 'suspect-noteen ';
+        noteArea.placeholder = 'Notities...';
+        noteArea.value = person.note || '';
+        noteArea.onclick = (e) => e.preventDefault(); // Prevent triggering checkbox
+        noteArea.onchange = (e) => {
+           person.note = e.target.value;
+           saveData();
+        };
+        
+        // Append note area to label (inside person-content or after?)
+        // Let's append it to the label but make sure clicking it doesn't toggle checkbox
+        // Actually, putting it inside the label is tricky for events.
+        // Let's restructure: The label wraps the checkbox and content. The textarea should be separate or handled carefully.
+        // Easier: Put textarea inside label, stopPropagation on click.
+        
+        const contentDiv = label.querySelector('.person-content');
+        contentDiv.appendChild(noteArea);
+        
+        noteArea.addEventListener('click', (e) => {
+           e.preventDefault();
+           e.stopPropagation();
+        });
+
+        container.appendChild(label);
+        renderedCount++;
+      });
+
+      if (renderedCount === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.style.padding = '1rem';
+        emptyState.style.background = 'rgba(0,0,0,0.4)';
+        emptyState.style.border = '1px dashed rgba(255,255,255,0.2)';
+        emptyState.textContent = 'Geen verdachten gevonden. Gebruik Admin > Bewerk Verdachten om namen toe te voegen of klik op Reset Alles.';
+        container.appendChild(emptyState);
+      }
+    }
+
+    function showRoundSubTab(roundId, tabType) {
+       // roundId: 'r1' or 'r2'
+       // tabType: 'questions' or 'map'
+       
+       if (tabType === 'map' && !appData.tabVisibility.map && !isAdminMode()) {
+          alert("De kaart is nog vergrendeld! Los eerst de vragen op of wacht op de docent.");
+          return;
+       }
+       
+       // Toggle buttons
+       document.getElementById(`btn-${roundId}-q`).classList.toggle('active', tabType === 'questions');
+       document.getElementById(`btn-${roundId}-m`).classList.toggle('active', tabType === 'map');
+       
+       // Toggle panels
+       document.getElementById(`${roundId}-questions-panel`).style.display = tabType === 'questions' ? 'block' : 'none';
+       document.getElementById(`${roundId}-map-panel`).style.display = tabType === 'map' ? 'block' : 'none';
+       
+       if (tabType === 'map') {
+         setActiveMapRound(roundId);
+          // Move the map component to this round's placeholder
+          const mapRoot = document.getElementById('movable-map-root');
+          const target = document.querySelector(`#${roundId}-map-panel .map-placeholder-target`);
+          if (mapRoot && target) {
+             mapRoot.style.display = 'block';
+           mapRoot.dataset.activeRound = roundId;
+             target.appendChild(mapRoot);
+           const markerBtn = document.getElementById('map-place-markers-btn');
+           if (markerBtn) {
+            markerBtn.style.display = roundId === 'r1' ? 'inline-flex' : 'none';
+           }
+          }
+         renderMap();
+         renderHints();
+       }
+    }
+
+    function renderQuestions() {
+      ['r1', 'r2', 'r3'].forEach(round => {
+        const container = document.getElementById(`${round}-questions`);
+        if (!container) return;
+        container.innerHTML = '';
+        
+        appData.questions[round].forEach(q => {
+          const li = document.createElement('li');
+          
+          let html = `<strong>${q.text}</strong>`;
+          
+          if (q.type === 'radio') {
+            html += `<div class="options">`;
+            q.options.forEach(opt => {
+              html += `<label><input type="radio" name="${q.id}" value="${opt}"> ${opt}</label>`;
+            });
+            if (q.hasOpen) {
+              html += `<textarea class="open-answer" id="answer-${q.id}-extra" placeholder="Toelichting..."></textarea>`;
+            }
+            html += `</div>`;
+          } else if (q.type === 'open') {
+            html += `<textarea class="open-answer" id="answer-${q.id}" placeholder="Antwoord..."></textarea>`;
+          } else if (q.type === 'complex') {
+             html += `
+              <div class="options">
+                <label>
+                  <input type="radio" name="${q.id}" value="comboA">
+                  Secret Santa is
+                  <input type="text" class="open-answer" style="display:inline-block; width:140px;" placeholder="naam">
+                  en het cadeau ligt bij <strong>locatie A</strong>.
+                </label>
+                <label>
+                  <input type="radio" name="${q.id}" value="comboB">
+                  Secret Santa is
+                  <input type="text" class="open-answer" style="display:inline-block; width:140px;" placeholder="naam">
+                  en het cadeau ligt bij <strong>locatie B</strong>.
+                </label>
+                <label>
+                  <input type="radio" name="${q.id}" value="comboC">
+                  Secret Santa is
+                  <input type="text" class="open-answer" style="display:inline-block; width:140px;" placeholder="naam">
+                  en het cadeau ligt bij <strong>locatie C</strong>.
+                </label>
+                <label>
+                  <input type="radio" name="${q.id}" value="anders">
+                  Iets totaal anders:
+                </label>
+                <textarea class="open-answer" placeholder="Bijvoorbeeld: Secret Santa is … en het cadeau ligt bij …"></textarea>
+              </div>
+             `;
+          }
+          
+          li.innerHTML = html;
+          container.appendChild(li);
+        });
+
+        // Add Check Button if not exists
+        const panel = document.getElementById(`${round}-questions-panel`);
+        
+        let btn = document.getElementById(`btn-check-${round}`);
+        if (!btn) {
+           btn = document.createElement('button');
+           btn.id = `btn-check-${round}`;
+           btn.className = 'mini-btn';
+           btn.style.marginTop = '1rem';
+           btn.style.width = '100%';
+           btn.style.padding = '1rem';
+           btn.style.fontSize = '1.1rem';
+           btn.style.background = 'var(--widm-green)';
+           btn.style.color = '#000';
+           btn.style.fontWeight = 'bold';
+           btn.textContent = 'ANTWOORDEN CONTROLEREN & KAART VRIJSPELEN';
+           btn.onclick = () => checkAnswers(round);
+           
+           // Insert before elimination div
+           const elimDiv = panel.querySelector('.elimination');
+           if (elimDiv) {
+              panel.insertBefore(btn, elimDiv);
+           } else {
+              panel.appendChild(btn);
+           }
+        }
+      });
+    }
+
+    function renderSuspectPickers() {
+      Object.keys(suspectSelectionLimits).forEach(round => {
+        const grid = document.getElementById(`${round}-suspect-grid`);
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        const picks = appData.roundGuesses[round] || [];
+
+        appData.suspects.forEach((person, index) => {
+          const label = document.createElement('label');
+          label.className = 'suspect-pick';
+          label.setAttribute('for', `${round}-suspect-${index}`);
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = `${round}-suspect-${index}`;
+          checkbox.checked = picks.includes(person.name);
+          checkbox.addEventListener('change', (e) => handleSuspectPickChange(round, person.name, e.target));
+
+          const span = document.createElement('span');
+          span.textContent = person.name;
+
+          label.appendChild(checkbox);
+          label.appendChild(span);
+          grid.appendChild(label);
+        });
+
+        updateSuspectCounter(round);
+        updateHintChip(round);
+      });
+    }
+
+    function handleSuspectPickChange(round, suspectName, checkbox) {
+      let picks = appData.roundGuesses[round] ? [...appData.roundGuesses[round]] : [];
+      if (checkbox.checked) {
+        if (picks.includes(suspectName)) return;
+        const limit = suspectSelectionLimits[round];
+        if (picks.length >= limit) {
+          alert(`Je mag maximaal ${limit} verdachten kiezen in deze ronde.`);
+          checkbox.checked = false;
+          return;
+        }
+        picks.push(suspectName);
+      } else {
+        picks = picks.filter(name => name !== suspectName);
+      }
+
+      appData.roundGuesses[round] = picks;
+      saveData({ skipRender: true });
+      updateSuspectCounter(round);
+    }
+
+    function updateSuspectCounter(round) {
+      const counter = document.getElementById(`${round}-suspect-counter`);
+      if (!counter) return;
+      const current = appData.roundGuesses[round] ? appData.roundGuesses[round].length : 0;
+      const limit = suspectSelectionLimits[round] || 0;
+      counter.textContent = `${current}/${limit}`;
+    }
+
+    function updateHintChip(round) {
+      const chip = document.getElementById(`${round}-hint-chip`);
+      if (!chip) return;
+      const text = appData.roundHints[round];
+      if (text) {
+        const lines = text.split('\n');
+        chip.innerHTML = '';
+        lines.forEach((line, idx) => {
+          if (idx > 0) {
+            chip.appendChild(document.createElement('br'));
+          }
+          chip.appendChild(document.createTextNode(line));
+        });
+        chip.style.display = 'block';
+      } else {
+        chip.style.display = 'none';
+        chip.textContent = '';
+      }
+    }
+
+    function clearRoundHint(round) {
+      const normalizedRound = normalizeHintRound(round);
+      if (!appData.roundHints) {
+        appData.roundHints = {};
+      }
+      appData.roundHints[normalizedRound] = null;
+      updateHintChip(normalizedRound);
+      saveData({ skipRender: true });
+    }
+
+    function refreshAdminOverview() {
+      updateAdminRoundCards();
+      updateSecretTargetSummary();
+    }
+
+    function setStatusTextClass(el, condition) {
+      if (!el) return;
+      el.classList.toggle('text-good', !!condition);
+      el.classList.toggle('text-warn', !condition);
+    }
+
+    function updateAdminRoundCards() {
+      const rounds = ['r1', 'r2'];
+      const targetName = getSecretSantaName();
+      rounds.forEach(round => {
+        const markerSpan = document.querySelector(`[data-admin-marker-count="${round}"]`);
+        const winnerSpan = document.querySelector(`[data-admin-winner-flag="${round}"]`);
+        const nextCodeSpan = document.querySelector(`[data-admin-next-code="${round}"]`);
+        const hintStateSpan = document.querySelector(`[data-admin-hint-earned="${round}"]`);
+        const hintPreviewSpan = document.querySelector(`[data-admin-hint-preview="${round}"]`);
+        const targetHitSpan = document.querySelector(`[data-admin-target-hit="${round}"]`);
+
+        const markers = getMapMarkers(round);
+        if (markerSpan) {
+          markerSpan.textContent = `${markers.length}/${MAP_MARKER_LIMIT}`;
+        }
+
+        const hasWinner = markers.some(marker => marker.status === 'winner');
+        if (winnerSpan) {
+          winnerSpan.textContent = hasWinner ? 'Ja' : 'Nee';
+          setStatusTextClass(winnerSpan, hasWinner);
+        }
+
+        if (nextCodeSpan) {
+          const nextCode = getNextLockedHintCode(round);
+          nextCodeSpan.textContent = nextCode || 'Alle hints open';
+        }
+
+        const hintText = appData.roundHints[round];
+        const hintUnlocked = !!hintText;
+        if (hintStateSpan) {
+          hintStateSpan.textContent = hintUnlocked ? 'Ja' : 'Nog niet';
+          setStatusTextClass(hintStateSpan, hintUnlocked);
+        }
+        if (hintPreviewSpan) {
+          hintPreviewSpan.textContent = hintUnlocked ? hintText.split('\n')[0] : '—';
+        }
+
+        const guesses = (appData.roundGuesses && appData.roundGuesses[round]) || [];
+        const targetHit = !!targetName && guesses.includes(targetName);
+        if (targetHitSpan) {
+          targetHitSpan.textContent = targetHit ? 'Ja' : 'Nee';
+          setStatusTextClass(targetHitSpan, targetHit);
+        }
+      });
+
+      const mapStateEl = document.querySelector('[data-admin-map-state="r1"]');
+      const mapChip = document.querySelector('[data-round-unlock-chip="r1"]');
+      const mapOpen = !!appData.tabVisibility.map;
+      if (mapStateEl) {
+        mapStateEl.textContent = mapOpen ? 'OPEN' : 'LOCKED';
+      }
+      if (mapChip) {
+        mapChip.classList.toggle('success', mapOpen);
+        mapChip.classList.toggle('warn', !mapOpen);
+      }
+
+      const finalStateEl = document.querySelector('[data-admin-next-unlock="r2"]');
+      const finalChip = document.querySelector('[data-round-unlock-chip="r2"]');
+      const finalOpen = !!appData.tabVisibility.round3;
+      if (finalStateEl) {
+        finalStateEl.textContent = finalOpen ? 'OPEN' : 'LOCKED';
+      }
+      if (finalChip) {
+        finalChip.classList.toggle('success', finalOpen);
+        finalChip.classList.toggle('warn', !finalOpen);
+      }
+    }
+
+    function updateSecretTargetSummary() {
+      const nameEl = document.getElementById('secret-target-name-display');
+      if (nameEl) {
+        nameEl.textContent = getSecretSantaName() || '—';
+      }
+      const hintStatusEl = document.getElementById('secret-hint-status');
+      if (hintStatusEl) {
+        const unlocked = Object.keys(appData.roundHints || {}).filter(round => appData.roundHints[round]);
+        if (unlocked.length) {
+          hintStatusEl.textContent = `Actief (${unlocked.length})`;
+          hintStatusEl.classList.add('text-good');
+          hintStatusEl.classList.remove('text-warn');
+        } else {
+          hintStatusEl.textContent = 'Nog niet verstuurd';
+          hintStatusEl.classList.add('text-warn');
+          hintStatusEl.classList.remove('text-good');
+        }
+      }
+    }
+
+    function initAdminRoundActionButtons() {
+      document.querySelectorAll('[data-admin-map-round]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!ensureAdminMode()) return;
+          const targetRound = normalizeMapRound(btn.dataset.adminMapRound || 'r1');
+          editorMapRound = targetRound;
+          openEditor('map');
+          const editorPanel = document.getElementById('admin-editor-container');
+          if (editorPanel) {
+            editorPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-admin-hint-round]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!ensureAdminMode()) return;
+          const targetRound = normalizeMapRound(btn.dataset.adminHintRound || 'r1');
+          editorHintRound = targetRound;
+          openEditor('hints');
+          const editorPanel = document.getElementById('admin-editor-container');
+          if (editorPanel) {
+            editorPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-admin-reset-hint]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!ensureAdminMode()) return;
+          const targetRound = normalizeHintRound(btn.dataset.adminResetHint || 'r1');
+          const roundLabel = getFriendlyRoundLabel(targetRound);
+          const confirmMessage = `Hint voor ${roundLabel} resetten? Teams zien hem daarna niet meer totdat je hem opnieuw verstuurt.`;
+          if (!confirm(confirmMessage)) return;
+          clearRoundHint(targetRound);
+        });
+      });
+    }
+
+    function evaluateSuspectSelection(round) {
+      const target = appData.suspects.find(person => person.isTarget);
+      if (!target) return;
+
+      const picks = appData.roundGuesses[round] || [];
+      if (!picks.includes(target.name)) {
+        return;
+      }
+
+      const mapRound = round === 'r2' ? 'r2' : (round === 'r1' ? 'r1' : null);
+      if (!mapRound) return;
+      const hintText = buildLocationHint(mapRound);
+      if (!hintText) return;
+      const unlockCode = getNextLockedHintCode(mapRound);
+      const locationMessage = unlockCode
+        ? `${hintText}\nCode voor de kaart: ${unlockCode}`
+        : hintText;
+      const secretWhisper = getSecretHintMessage();
+      const combinedMessage = [secretWhisper, locationMessage]
+        .filter(Boolean)
+        .join('\n');
+      appData.roundHints[round] = combinedMessage;
+      updateHintChip(round);
+      saveData({ skipRender: true });
+    }
+
+    function buildLocationHint(round) {
+      const markers = getMapMarkers(round);
+      const winner = markers.find(marker => marker.status === 'winner');
+      if (winner) {
+        const locationName = winner.name || `marker ${winner.label}`;
+        return `Hint: mogelijke locatie bij ${locationName}.`;
+      }
+      const fallback = markers.find(marker => marker.status !== 'eliminated');
+      if (fallback) {
+        const name = fallback.name || `marker ${fallback.label}`;
+        return `Hint: kijk extra goed bij ${name}.`;
+      }
+      return null;
+    }
+
+    function getNextLockedHintCode(round) {
+      const hints = getMapHints(round);
+      if (!Array.isArray(hints)) return null;
+      const nextLocked = hints.find(hint => hint.locked && hint.code);
+      if (!nextLocked || !nextLocked.code) return null;
+      return nextLocked.code.toString().trim().toUpperCase();
+    }
+
+    function checkAnswers(round) {
+       const questions = appData.questions[round];
+       let correctCount = 0;
+       let totalCheckable = 0;
+       
+       questions.forEach(q => {
+          if (!q.correctAnswer) return; 
+          totalCheckable++;
+          
+          let isCorrect = false;
+          let userAnswer = '';
+
+          if (q.type === 'radio') {
+             const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+             if (selected) userAnswer = selected.value;
+             if (userAnswer === q.correctAnswer) isCorrect = true;
+          } else if (q.type === 'open') {
+             const input = document.getElementById(`answer-${q.id}`);
+             if (input) userAnswer = input.value.trim();
+             
+             // Check if numeric
+             const numUser = parseFloat(userAnswer.replace(',', '.'));
+             const numCorrect = parseFloat(q.correctAnswer.replace(',', '.'));
+             
+             if (!isNaN(numUser) && !isNaN(numCorrect)) {
+                // 10% margin
+                const margin = numCorrect * 0.10;
+                if (Math.abs(numUser - numCorrect) <= margin) {
+                   isCorrect = true;
+                }
+             } else {
+                // String comparison (case insensitive)
+                if (userAnswer.toLowerCase() === q.correctAnswer.toLowerCase()) {
+                   isCorrect = true;
+                }
+             }
+          }
+          
+          if (isCorrect) correctCount++;
+       });
+       
+       if (totalCheckable === 0) {
+          alert("Er zijn geen antwoorden ingesteld door de admin om te controleren.");
+          return;
+       }
+
+       const wrongCount = totalCheckable - correctCount;
+       alert(`Je hebt ${correctCount} van de ${totalCheckable} vragen goed!`);
+       
+      const mapRound = round === 'r1' ? 'r1' : (round === 'r2' ? 'r2' : null);
+      if (mapRound) {
+        const markers = getMapMarkers(mapRound);
+        if (markers.length !== MAP_MARKER_LIMIT) {
+          alert(`Zorg dat er precies ${MAP_MARKER_LIMIT} markers op de kaart staan voordat je antwoorden inlevert.`);
+          return;
+        }
+
+        const winnerPresent = markers.some(marker => marker.status === 'winner');
+        if (!winnerPresent) {
+          alert('Stel in de Admin bij de plattegrond aan welke marker de echte verstopplek is (status WINNAAR).');
+          return;
+        }
+
+        let candidates = markers.filter(marker => marker.status !== 'winner' && marker.status !== 'eliminated');
+        if (candidates.length === 0) {
+          alert('Alle valse locaties zijn al weggestreept!');
+        }
+
+        candidates = candidates.sort(() => Math.random() - 0.5);
+        const removeCount = Math.min(correctCount, candidates.length);
+        for (let i = 0; i < removeCount; i++) {
+          candidates[i].status = 'eliminated';
+        }
+
+        if (removeCount > 0) {
+          alert(`${removeCount} onjuiste locaties zijn van de kaart gestreept!`);
+        }
+      }
+      
+      evaluateSuspectSelection(round);
+
+      // Unlock next stages
+      appData.tabVisibility.map = true;
+      if (round === 'r1') {
+        appData.round1Complete = true;
+        alert('Ronde 1 gehaald! Laat de docent ronde 2 ontgrendelen in het admin-paneel.');
+      } else if (round === 'r2') {
+        appData.round2Complete = true;
+        alert('Ronde 2 gehaald! Vraag de docent om de finale via het admin-paneel te openen.');
+      }
+       saveData();
+       renderAll();
+       
+       // Switch to map tab when available
+       if (document.getElementById(`btn-${round}-m`)) {
+        showRoundSubTab(round, 'map');
+       }
+    }
+
+    function renderHints() {
+      const container = document.getElementById('hints-container');
+      if (!container) return;
+      container.innerHTML = '';
+      const round = getActiveMapRound();
+      const hints = getMapHints(round);
+
+      hints.forEach((hint, index) => {
+        const card = document.createElement('div');
+        card.className = `hint-card ${hint.locked ? 'locked' : ''}`;
+        const inputId = `hint-code-${round}-${index}`;
+        
+        let contentHtml = '';
+        if (hint.locked) {
+          contentHtml = `
+            <div class="hint-content hint-blur">Dit is een geheime hint die je moet vrijspelen.</div>
+            <div class="hint-unlock-area">
+              <input type="text" class="hint-unlock-input" placeholder="CODE" id="${inputId}">
+              <button class="hint-btn" onclick="unlockHint('${round}', ${index})">UNLOCK</button>
+            </div>
+          `;
+        } else {
+          contentHtml = `
+            <div class="hint-content"><strong>Hint ${index+1}:</strong> ${hint.text}</div>
+          `;
+        }
+        
+        card.innerHTML = contentHtml;
+        container.appendChild(card);
+      });
+    }
+
+    function unlockHint(round, index) {
+      const input = document.getElementById(`hint-code-${round}-${index}`);
+      if (!input) return;
+      const code = input.value.trim().toUpperCase();
+      const hints = getMapHints(round);
+      const hint = hints[index];
+      if (!hint) return;
+      
+      if (hint.code && code === hint.code.toUpperCase()) {
+        hint.locked = false;
+        saveData();
+        alert("Hint vrijgespeeld!");
+      } else {
+        alert("Foute code!");
+        input.value = '';
+      }
+    }
+    
+    // Expose unlockHint to global scope for onclick
+    window.unlockHint = unlockHint;
+
+    function unlockMap() {
+       if(confirm("Weet je zeker dat je de antwoorden wilt inleveren en de kaart wilt openen?")) {
+          appData.tabVisibility.map = true;
+          saveData();
+          renderAll();
+          // Switch to map tab
+          const mapBtn = document.querySelector('[data-top-tab="map"]');
+          if(mapBtn) mapBtn.click();
+       }
+    }
+    window.unlockMap = unlockMap;
+
+    function renderMap() {
+      const mapContainer = document.getElementById('map-grid');
+      if (!mapContainer) return;
+      mapContainer.innerHTML = '';
+      const round = getActiveMapRound();
+      const mapState = getMapState(round);
+      const markers = mapState.markers || [];
+      const adminView = isAdminMode();
+      
+      // Ensure mapLayout exists (migration for old data)
+      if (!appData.mapLayout || appData.mapLayout.length === 0) {
+         appData.mapLayout = defaultData.mapLayout;
+      }
+
+      mapContainer.style.backgroundImage = '';
+      mapContainer.classList.remove('rotated-45');
+
+      if (SHOW_BLUEPRINT_BLOCKS) {
+        appData.mapLayout.forEach((cell) => {
+          const div = document.createElement('div');
+          div.className = 'map-cell';
+          if (cell.type === 0) div.classList.add('cell-empty');
+          else if (cell.type === 1) div.classList.add('cell-hallway');
+          else if (cell.type === 2) div.classList.add('cell-room');
+          else if (cell.type === 3) div.classList.add('cell-start');
+
+          if (cell.label) {
+            const span = document.createElement('span');
+            span.className = 'map-cell-label';
+            span.textContent = cell.label;
+            div.appendChild(span);
+          }
+
+          if (isAdminMode()) {
+            div.classList.add('map-cell-admin');
+            div.title = 'Klik om markers te beheren (plaats/verwijder)';
+          }
+
+          div.style.pointerEvents = 'none';
+          mapContainer.appendChild(div);
+        });
+      }
+
+      mapContainer.onclick = (event) => handleMapCanvasClick(event, mapContainer);
+
+      // Render Markers
+      if (Array.isArray(markers)) {
+        markers.forEach((marker, index) => {
+          if (!marker) return;
+          if (marker.status === 'hidden' && !adminView) return;
+          const mDiv = document.createElement('div');
+          const status = marker.status || 'visible';
+          const markerName = marker.name || `Locatie ${marker.label || ''}`;
+          mDiv.className = `map-marker status-${status}`;
+          mDiv.textContent = marker.label || '?';
+          mDiv.dataset.name = markerName;
+          mDiv.title = markerName;
+          ensureMarkerPosition(marker);
+          mDiv.style.left = `${marker.relX * 100}%`;
+          mDiv.style.top = `${marker.relY * 100}%`;
+          if (adminView) {
+            mDiv.addEventListener('pointerdown', (event) => startMarkerDrag(event, index, mapContainer, round));
+          }
+          mapContainer.appendChild(mDiv);
+        });
+      }
+
+      if (adminView) {
+        const helper = document.createElement('div');
+        helper.className = 'map-admin-helper';
+        const placed = markers.length || 0;
+        helper.innerHTML = `<strong>Admin-modus</strong><br>Markers geplaatst (Ronde ${round === 'r1' ? '1' : '2'}): ${placed}/${MAP_MARKER_LIMIT}.<br>Klik kort om een marker te verwijderen of sleep om te verplaatsen. Zorg dat er één WINNAAR is.`;
+        mapContainer.appendChild(helper);
+      }
+    }
+
+    function handleMapCanvasClick(event, mapElement) {
+      event.preventDefault();
+      if (!isAdminMode()) {
+        if (isAdminPanelVisible() && !markerEditReminderShown) {
+          alert('Activeer eerst Admin-modus (groene knop) om markers te plaatsen of te verwijderen.');
+          markerEditReminderShown = true;
+        }
+        return;
+      }
+      if (!mapElement) return;
+      if (event.target.closest('.map-marker')) return;
+      const round = getActiveMapRound();
+      const markers = getMapMarkers(round);
+
+      const rect = mapElement.getBoundingClientRect();
+      const relX = clamp((event.clientX - rect.left) / rect.width, 0.02, 0.98);
+      const relY = clamp((event.clientY - rect.top) / rect.height, 0.02, 0.98);
+
+      if (markers.length >= MAP_MARKER_LIMIT) {
+        alert(`Er mogen maximaal ${MAP_MARKER_LIMIT} markers tegelijk zijn.`);
+        return;
+      }
+
+      const suggestion = getNextMarkerLabel(round);
+      const labelInput = prompt('Label voor deze locatie (bijv. A, B, C):', suggestion) || '';
+      const label = labelInput.trim().toUpperCase();
+      if (!label) return;
+      if (markers.some(marker => (marker.label || '').toUpperCase() === label)) {
+        alert('Deze markeraanduiding bestaat al. Kies een andere letter.');
+        return;
+      }
+
+      const hasWinner = markers.some(marker => marker.status === 'winner');
+      markers.push({
+        relX,
+        relY,
+        label,
+        name: `Locatie ${label}`,
+        status: hasWinner ? 'visible' : 'winner'
+      });
+      saveData({ skipRender: true });
+      renderMap();
+      if (currentEditMode === 'map') {
+        openEditor('map');
+      }
+    }
+
+    function startMarkerDrag(event, markerIndex, mapElement, round) {
+      if (!isAdminMode()) return;
+      if (event.button !== undefined && event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      draggingMarkerIndex = markerIndex;
+      draggingMarkerElement = event.currentTarget;
+      draggingMapElement = mapElement;
+      draggingRound = round || getActiveMapRound();
+      draggingPointerId = event.pointerId !== undefined ? event.pointerId : null;
+      draggingMoved = false;
+      dragMapRect = mapElement.getBoundingClientRect();
+      if (draggingMarkerElement && draggingPointerId !== null && draggingMarkerElement.setPointerCapture) {
+        try { draggingMarkerElement.setPointerCapture(draggingPointerId); } catch (err) {}
+      }
+      document.addEventListener('pointermove', handleMarkerDragMove);
+      document.addEventListener('pointerup', handleMarkerDragEnd);
+    }
+
+    function handleMarkerDragMove(event) {
+      if (draggingMarkerIndex === null) return;
+      if (draggingPointerId !== null && event.pointerId !== draggingPointerId) return;
+      if (!draggingMapElement || !dragMapRect) return;
+      event.preventDefault();
+      draggingMoved = true;
+      const relX = clamp((event.clientX - dragMapRect.left) / dragMapRect.width, 0.02, 0.98);
+      const relY = clamp((event.clientY - dragMapRect.top) / dragMapRect.height, 0.02, 0.98);
+      const round = draggingRound || getActiveMapRound();
+      const markers = getMapMarkers(round);
+      const marker = markers[draggingMarkerIndex];
+      if (!marker) return;
+      marker.relX = relX;
+      marker.relY = relY;
+      if (draggingMarkerElement) {
+        draggingMarkerElement.style.left = `${relX * 100}%`;
+        draggingMarkerElement.style.top = `${relY * 100}%`;
+      }
+    }
+
+    function handleMarkerDragEnd(event) {
+      if (draggingMarkerIndex === null) return;
+      if (draggingPointerId !== null && event.pointerId !== draggingPointerId) return;
+      event.preventDefault();
+      if (draggingMarkerElement && draggingPointerId !== null && draggingMarkerElement.releasePointerCapture) {
+        try { draggingMarkerElement.releasePointerCapture(draggingPointerId); } catch (err) {}
+      }
+      document.removeEventListener('pointermove', handleMarkerDragMove);
+      document.removeEventListener('pointerup', handleMarkerDragEnd);
+
+      const markerIndex = draggingMarkerIndex;
+      const round = draggingRound || getActiveMapRound();
+      const moved = draggingMoved;
+      resetMarkerDragState();
+
+      if (moved) {
+        saveData({ skipRender: true });
+        renderMap();
+        if (currentEditMode === 'map') {
+          openEditor('map');
+        }
+      } else {
+        removeMarkerAtIndex(round, markerIndex);
+      }
+    }
+
+    function resetMarkerDragState() {
+      draggingMarkerIndex = null;
+      draggingMarkerElement = null;
+      draggingMapElement = null;
+      draggingPointerId = null;
+      draggingMoved = false;
+      dragMapRect = null;
+      draggingRound = null;
+    }
+
+    function removeMarkerAtIndex(round, markerIndex) {
+      const markers = getMapMarkers(round);
+      if (markerIndex == null || markerIndex < 0 || !markers[markerIndex]) return;
+      if (confirm('Marker verwijderen?')) {
+        markers.splice(markerIndex, 1);
+        saveData({ skipRender: true });
+        renderMap();
+        if (currentEditMode === 'map') {
+          openEditor('map');
+        }
+      }
+    }
+
+    function updateSubTabButtons() {
+       const mapButtons = document.querySelectorAll('[id$="-m"]'); // btn-r1-m, btn-r2-m
+       mapButtons.forEach(btn => {
+           if (!appData.tabVisibility.map && !isAdminMode()) {
+             btn.style.opacity = '0.5';
+             btn.innerHTML = '2. De Kaart 🔒';
+          } else {
+             btn.style.opacity = '1';
+             btn.innerHTML = '2. De Kaart';
+          }
+       });
+    }
+
+    function syncSecretTargetControls() {
+      const select = document.getElementById('secret-target-select');
+      const hintInput = document.getElementById('secret-hint-input');
+      const preview = document.getElementById('secret-hint-preview');
+      if (!select || !hintInput) return;
+
+      const currentName = getSecretSantaName();
+      const currentHint = getSecretHintMessage();
+      select.innerHTML = '';
+      const placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = '— Kies een verdachte —';
+      select.appendChild(placeholderOption);
+
+      appData.suspects
+        .filter(person => person && person.name)
+        .forEach(person => {
+          const option = document.createElement('option');
+          option.value = person.name;
+          option.textContent = person.name;
+          if (person.name === currentName) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+
+      hintInput.value = currentHint || '';
+      if (preview) {
+        preview.textContent = hintInput.value.trim() || DEFAULT_SECRET_HINT;
+      }
+    }
+
+    function initSecretTargetAdmin() {
+      const select = document.getElementById('secret-target-select');
+      const hintInput = document.getElementById('secret-hint-input');
+      const preview = document.getElementById('secret-hint-preview');
+      const saveBtn = document.getElementById('secret-target-save');
+      const randomBtn = document.getElementById('secret-target-random');
+      if (!select || !hintInput) return;
+
+      const updatePreview = () => {
+        if (preview) {
+          preview.textContent = hintInput.value.trim() || DEFAULT_SECRET_HINT;
+        }
+      };
+
+      hintInput.addEventListener('input', updatePreview);
+
+      if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          const chosenName = select.value;
+          if (!chosenName) {
+            alert('Kies eerst welke collega de geheime gever is.');
+            return;
+          }
+          appData.suspects.forEach(person => {
+            if (person && person.name) {
+              person.isTarget = person.name === chosenName;
+            }
+          });
+          ensureSecretSantaConfig();
+          appData.secretSanta.name = chosenName;
+          appData.secretSanta.hint = hintInput.value.trim() || DEFAULT_SECRET_HINT;
+          saveData();
+          alert('Secret Santa opgeslagen. De hint blijft vaag voor de leerlingen.');
+        });
+      }
+
+      if (randomBtn) {
+        randomBtn.addEventListener('click', () => {
+          if (!Array.isArray(appData.suspects) || appData.suspects.length === 0) return;
+          const pool = appData.suspects.filter(person => person && person.name);
+          if (!pool.length) return;
+          const randomPerson = pool[Math.floor(Math.random() * pool.length)];
+          select.value = randomPerson.name;
+          updatePreview();
+        });
+      }
+
+      syncSecretTargetControls();
+    }
+
+    function renderAll() {
+      renderSuspects();
+      renderQuestions();
+      renderSuspectPickers();
+      renderMap();
+      renderHints();
+      applyTabLocks();
+      updateSubTabButtons();
+      updateTabToggleStatuses();
+      syncSecretTargetControls();
+      refreshAdminOverview();
+    }
+
+    // --- ADMIN EDITORS ---
+    const editorContainer = document.getElementById('admin-editor-container');
+    const editorContent = document.getElementById('admin-editor-content');
+    const editorTitle = document.getElementById('admin-editor-title');
+    let currentEditMode = null;
+
+    const editQuestionsBtn = document.getElementById('admin-edit-questions-btn');
+    if (editQuestionsBtn) {
+      editQuestionsBtn.addEventListener('click', () => {
+        openEditor('questions');
+      });
+    }
+
+    const editSuspectsBtn = document.getElementById('admin-edit-suspects-btn');
+    if (editSuspectsBtn) {
+      editSuspectsBtn.addEventListener('click', () => {
+        openEditor('suspects');
+      });
+    }
+
+    const editMapBtn = document.getElementById('admin-edit-map-btn');
+    if (editMapBtn) {
+      editMapBtn.addEventListener('click', () => {
+        openEditor('map');
+      });
+    }
+
+    const editHintsBtn = document.getElementById('admin-edit-hints-btn');
+    if (editHintsBtn) {
+      editHintsBtn.addEventListener('click', () => {
+        openEditor('hints');
+      });
+    }
+
+    const editTabsBtn = document.getElementById('admin-edit-tabs-btn');
+    if (editTabsBtn) {
+      editTabsBtn.addEventListener('click', () => {
+        openEditor('tabs');
+      });
+    }
+
+    const resetDataBtn = document.getElementById('admin-reset-data-btn');
+    if (resetDataBtn) {
+      resetDataBtn.addEventListener('click', resetData);
+    }
+
+    const cancelBtn = document.getElementById('admin-cancel-btn');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        editorContainer.style.display = 'none';
+      });
+    }
+    
+    const saveBtn = document.getElementById('admin-save-btn');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        if (currentEditMode === 'questions') {
+          // Save questions logic
+          // Rebuild questions array from DOM
+          const rounds = ['r1', 'r2', 'r3'];
+          rounds.forEach(round => {
+             const container = document.getElementById(`edit-q-container-${round}`);
+             const newQuestions = [];
+             container.querySelectorAll('.edit-q-item').forEach((item, idx) => {
+                const text = item.querySelector('.q-text').value;
+                const type = item.querySelector('.q-type').value;
+                const optionsStr = item.querySelector('.q-options').value;
+                const correct = item.querySelector('.q-correct').value;
+                
+                const qObj = {
+                   id: `${round}-q${idx+1}`,
+                   text: text,
+                   type: type,
+                   correctAnswer: correct
+                };
+                
+                if (type === 'radio') {
+                   qObj.options = optionsStr.split(',').map(s => s.trim()).filter(s => s);
+                }
+                
+                newQuestions.push(qObj);
+             });
+             appData.questions[round] = newQuestions;
+          });
+
+        } else if (currentEditMode === 'suspects') {
+          // Save suspects logic
+          const rows = editorContent.querySelectorAll('.edit-suspect-row');
+          appData.suspects = [];
+          rows.forEach(row => {
+            appData.suspects.push({
+              name: row.querySelector('.edit-name').value,
+              role: row.querySelector('.edit-role').value,
+              img: row.querySelector('.edit-img').value,
+              isTarget: row.querySelector('.edit-target').checked
+            });
+          });
+        } else if (currentEditMode === 'map') {
+           // Map is saved live during editing in memory, just persist to localstorage
+        } else if (currentEditMode === 'tabs') {
+           // Save tab visibility
+           const checkboxes = editorContent.querySelectorAll('.tab-visibility-checkbox');
+           checkboxes.forEach(cb => {
+              appData.tabVisibility[cb.dataset.tab] = cb.checked;
+           });
+          } else if (currentEditMode === 'hints') {
+            const rows = editorContent.querySelectorAll('.edit-hint-row');
+            const newHints = [];
+            rows.forEach(row => {
+              const existingId = row.dataset.hintId;
+              newHints.push({
+                id: existingId || 'h' + Math.random().toString(36).substr(2, 5),
+                text: row.querySelector('.edit-hint-text').value,
+                code: row.querySelector('.edit-hint-code').value,
+                locked: row.querySelector('.edit-hint-locked').checked
+              });
+            });
+            getMapState(editorHintRound).hints = newHints;
+        }
+        saveData();
+        editorContainer.style.display = 'none';
+      });
+    }
+
+    function openEditor(mode) {
+      currentEditMode = mode;
+      editorContainer.style.display = 'block';
+      editorContent.innerHTML = '';
+      
+      if (mode === 'questions') {
+        editorTitle.textContent = 'Bewerk Vragen';
+        ['r1', 'r2', 'r3'].forEach(round => {
+          const h5 = document.createElement('h5');
+          h5.textContent = `Ronde ${round.replace('r', '')}`;
+          h5.style.color = 'var(--widm-green-soft)';
+          h5.style.marginTop = '1rem';
+          editorContent.appendChild(h5);
+          
+          const container = document.createElement('div');
+          container.id = `edit-q-container-${round}`;
+          
+          appData.questions[round].forEach((q, index) => {
+             addQuestionEditorRow(container, q);
+          });
+          
+          editorContent.appendChild(container);
+          
+          const addBtn = document.createElement('button');
+          addBtn.className = 'mini-btn';
+          addBtn.textContent = '+ Vraag toevoegen';
+          addBtn.style.marginTop = '0.5rem';
+          addBtn.onclick = () => {
+             addQuestionEditorRow(container, { text: '', type: 'open', options: [] });
+          };
+          editorContent.appendChild(addBtn);
+        });
+      } else if (mode === 'hints') {
+        editorTitle.textContent = 'Bewerk Hints & Codes';
+        editorHintRound = normalizeMapRound(editorHintRound);
+        const hints = getMapHints(editorHintRound);
+        const roundLabel = editorHintRound === 'r1' ? 'Ronde 1' : 'Ronde 2';
+
+        const p = document.createElement('p');
+        p.className = 'admin-note';
+        p.textContent = `Stel hier de hints in voor ${roundLabel}. Laat de code leeg als de hint direct zichtbaar mag zijn (en vink "Locked" uit).`;
+        editorContent.appendChild(p);
+
+        const hintSwitcher = document.createElement('div');
+        hintSwitcher.style.display = 'flex';
+        hintSwitcher.style.gap = '0.5rem';
+        hintSwitcher.style.flexWrap = 'wrap';
+        hintSwitcher.style.marginBottom = '1rem';
+        hintSwitcher.innerHTML = '<strong>Kies ronde:</strong>';
+        MAP_ROUNDS.forEach(round => {
+          const btn = document.createElement('button');
+          btn.className = 'mini-btn';
+          btn.textContent = round === 'r1' ? 'Ronde 1' : 'Ronde 2';
+          if (round === editorHintRound) {
+           btn.style.background = 'var(--widm-green)';
+           btn.style.color = '#000';
+          }
+          btn.addEventListener('click', () => {
+           editorHintRound = round;
+           openEditor('hints');
+          });
+          hintSwitcher.appendChild(btn);
+        });
+        editorContent.appendChild(hintSwitcher);
+
+        const listWrapper = document.createElement('div');
+        editorContent.appendChild(listWrapper);
+
+        const addHintRow = (hint = { text: '', code: '', locked: true, id: '' }) => {
+          const div = document.createElement('div');
+          div.className = 'edit-hint-row';
+          div.dataset.hintId = hint.id || '';
+          div.style.marginBottom = '1rem';
+          div.style.borderBottom = '1px solid #333';
+          div.style.paddingBottom = '0.5rem';
+          div.innerHTML = `
+            <div style="margin-bottom:0.5rem;">
+              <label style="font-size:0.8rem; color:#aaa;">Hint Tekst:</label>
+              <textarea class="admin-textarea edit-hint-text" rows="2">${hint.text || ''}</textarea>
+            </div>
+            <div style="display:flex; gap:1rem; align-items:center;">
+              <div style="flex:1;">
+                <label style="font-size:0.8rem; color:#aaa;">Unlock Code:</label>
+                <input class="admin-input edit-hint-code" value="${hint.code || ''}" placeholder="Bijv. KOFFIE">
+              </div>
+              <label style="cursor:pointer;">
+                <input type="checkbox" class="edit-hint-locked" ${hint.locked ? 'checked' : ''}> Locked?
+              </label>
+              <button type="button" class="mini-btn" style="border-color:#ff4141; color:#ff4141;" onclick="this.closest('.edit-hint-row').remove()">X</button>
+            </div>
+          `;
+          listWrapper.appendChild(div);
+        };
+
+        hints.forEach(addHintRow);
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'mini-btn';
+        addBtn.textContent = '+ Hint toevoegen';
+        addBtn.onclick = () => addHintRow();
+        editorContent.appendChild(addBtn);
+
+      } else if (mode === 'suspects') {
+        editorTitle.textContent = 'Bewerk Verdachten';
+        appData.suspects.forEach((person, index) => {
+          const div = document.createElement('div');
+          div.className = 'edit-suspect-row';
+          div.style.marginBottom = '1rem';
+          div.style.borderBottom = '1px solid #333';
+          div.style.paddingBottom = '0.5rem';
+          
+          // Extract filename for debug
+          let filename = '';
+          try {
+             if(person.img) {
+                const parts = person.img.split('/');
+                filename = parts[parts.length - 1];
+             }
+          } catch(e) {}
+
+          div.innerHTML = `
+            <div style="display:flex; gap:1rem; align-items:center; margin-bottom:0.5rem;">
+               <img src="${person.img}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; background:#333;" onerror="this.style.display='none'">
+               <div style="flex:1;">
+                 <div style="font-size:0.75rem; color:#aaa; margin-bottom:2px;">Bestandsnaam: ${filename}</div>
+                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+                    <input class="admin-input edit-name" placeholder="Naam" value="${person.name}">
+                    <input class="admin-input edit-role" placeholder="Rol" value="${person.role}">
+                 </div>
+               </div>
+            </div>
+            <input class="admin-input edit-img" placeholder="Afbeelding URL" value="${person.img}">
+            <label style="font-size:0.8rem; color:#aaa;">
+              <input type="checkbox" class="edit-target" ${person.isTarget ? 'checked' : ''}> Is Doelwit?
+            </label>
+          `;
+          editorContent.appendChild(div);
+        });
+        
+        // Add "Add New" button
+        const addBtn = document.createElement('button');
+        addBtn.className = 'mini-btn';
+        addBtn.textContent = '+ Voeg verdachte toe';
+        addBtn.onclick = () => {
+           const div = document.createElement('div');
+          div.className = 'edit-suspect-row';
+          div.style.marginBottom = '1rem';
+          div.style.borderBottom = '1px solid #333';
+          div.style.paddingBottom = '0.5rem';
+          div.innerHTML = `
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+              <input class="admin-input edit-name" placeholder="Naam" value="">
+              <input class="admin-input edit-role" placeholder="Rol" value="">
+            </div>
+            <input class="admin-input edit-img" placeholder="Afbeelding URL" value="">
+            <label style="font-size:0.8rem; color:#aaa;">
+              <input type="checkbox" class="edit-target"> Is Doelwit?
+            </label>
+          `;
+          editorContent.insertBefore(div, addBtn);
+        };
+        editorContent.appendChild(addBtn);
+      } else if (mode === 'tabs') {
+         editorTitle.textContent = 'Beheer Tabbladen (Zichtbaarheid)';
+         const p = document.createElement('p');
+         p.className = 'admin-note';
+         p.textContent = 'Vink aan welke onderdelen zichtbaar moeten zijn. Uitgevinkte onderdelen tonen "LOCKED".';
+         editorContent.appendChild(p);
+
+         const tabs = [
+            { id: 'home', label: '1. Home (Verdachten & Puzzel)' },
+            { id: 'round2', label: '2. Ronde 2' },
+            { id: 'map', label: '3. De Kaart' },
+            { id: 'round3', label: '4. Finale' }
+         ];
+
+        const list = document.createElement('div');
+        list.className = 'tab-visibility-list';
+        editorContent.appendChild(list);
+
+        tabs.forEach(tab => {
+          const label = document.createElement('label');
+          label.className = 'tab-visibility-row';
+          label.innerHTML = `
+            <input type="checkbox" class="tab-visibility-checkbox" data-tab="${tab.id}" ${appData.tabVisibility[tab.id] ? 'checked' : ''}>
+            <span>${tab.label}</span>
+          `;
+          list.appendChild(label);
+        });
+
+      } else if (mode === 'map') {
+         editorTitle.textContent = 'Beheer Locatie Markers';
+        editorMapRound = normalizeMapRound(editorMapRound);
+        setActiveMapRound(editorMapRound);
+        renderMap();
+        renderHints();
+
+          const switcher = document.createElement('div');
+          switcher.style.display = 'flex';
+          switcher.style.gap = '0.5rem';
+          switcher.style.marginBottom = '0.8rem';
+          switcher.style.flexWrap = 'wrap';
+          switcher.innerHTML = '<strong>Kies welke ronde-kaart je bewerkt:</strong>';
+          editorContent.appendChild(switcher);
+
+          MAP_ROUNDS.forEach(round => {
+            const btn = document.createElement('button');
+            btn.className = 'mini-btn';
+            btn.textContent = round === 'r1' ? 'Ronde 1' : 'Ronde 2';
+            if (round === editorMapRound) {
+              btn.style.background = 'var(--widm-green)';
+              btn.style.color = '#000';
+            }
+            btn.addEventListener('click', () => {
+              editorMapRound = round;
+              setActiveMapRound(round);
+              renderMap();
+              renderHints();
+              openEditor('map');
+            });
+            switcher.appendChild(btn);
+          });
+
+           const info = document.createElement('div');
+            info.className = 'admin-note';
+            info.innerHTML = `Klik op de kaart om markers toe te voegen, sleep bestaande markers naar de juiste plek en klik kort op een marker om hem te verwijderen. Zorg dat er precies ${MAP_MARKER_LIMIT} markers staan en dat één marker de status <strong>WINNAAR</strong> heeft.`;
+         editorContent.appendChild(info);
+
+        const markers = getMapMarkers(editorMapRound);
+        const roundLabel = editorMapRound === 'r1' ? 'Ronde 1' : 'Ronde 2';
+         const markersList = document.createElement('div');
+         markersList.style.marginBottom = '1rem';
+         markersList.style.padding = '0.5rem';
+         markersList.style.background = 'rgba(255,255,255,0.05)';
+        markersList.innerHTML = `<strong>Actieve locaties ${roundLabel} (${MAP_MARKER_LIMIT} verplicht)</strong><br><span style="font-size:0.8rem; color:#aaa;">Gebruik de lijst om namen/status aan te passen. Sleep markers op de kaart voor exacte positie of klik om er een te verwijderen.</span>`;
+
+         const markerCountNote = document.createElement('div');
+        markerCountNote.style.fontSize = '0.8rem';
+        markerCountNote.style.marginTop = '0.4rem';
+        markerCountNote.style.fontWeight = 'bold';
+        markerCountNote.style.color = markers.length === MAP_MARKER_LIMIT ? '#9fb89f' : '#ffb347';
+        markerCountNote.textContent = `Momenteel geplaatst: ${markers.length}/${MAP_MARKER_LIMIT}.`;
+        if (markers.length !== MAP_MARKER_LIMIT) {
+          markerCountNote.textContent += ' Voeg of verplaats markers tot je er precies zes hebt.';
+        }
+        markersList.appendChild(markerCountNote);
+
+        if (markers && markers.length > 0) {
+          markers.forEach((m, idx) => {
+            ensureMarkerPosition(m);
+            const mRow = document.createElement('div');
+            mRow.style.display = 'flex';
+            mRow.style.gap = '0.5rem';
+            mRow.style.alignItems = 'center';
+            mRow.style.marginTop = '0.5rem';
+            mRow.style.fontSize = '0.8rem';
+
+            const labelSpan = document.createElement('span');
+            labelSpan.style.width = '20px';
+            labelSpan.style.fontWeight = 'bold';
+            labelSpan.style.color = 'var(--widm-green)';
+            labelSpan.textContent = m.label;
+
+            const coords = document.createElement('span');
+            coords.style.width = '45px';
+            coords.style.fontSize = '0.7rem';
+            coords.style.color = '#888';
+            const percX = Math.round(m.relX * 100);
+            const percY = Math.round(m.relY * 100);
+            coords.textContent = `${percX}% / ${percY}%`;
+
+            const nameInput = document.createElement('input');
+            nameInput.className = 'admin-input';
+            nameInput.placeholder = 'Naam (bijv. Keuken)';
+            nameInput.value = m.name || '';
+            nameInput.addEventListener('change', (e) => {
+              markers[idx].name = e.target.value;
+              saveData({ skipRender: true });
+              renderMap();
+            });
+
+            const statusSelect = document.createElement('select');
+            statusSelect.className = 'admin-input';
+            statusSelect.style.width = '110px';
+            statusSelect.dataset.markerIndex = idx;
+            statusSelect.dataset.markerRound = editorMapRound;
+            const statuses = [
+              { value: 'hidden', label: 'Verborgen' },
+              { value: 'visible', label: 'Zichtbaar' },
+              { value: 'eliminated', label: 'Geëlimineerd' },
+              { value: 'winner', label: 'WINNAAR' }
+            ];
+            statuses.forEach(s => {
+              const option = document.createElement('option');
+              option.value = s.value;
+              option.textContent = s.label;
+              statusSelect.appendChild(option);
+            });
+            statusSelect.value = m.status;
+            statusSelect.addEventListener('change', (e) => {
+              updateMarkerStatus(editorMapRound, idx, e.target.value);
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'mini-btn';
+            deleteBtn.style.color = '#ff4141';
+            deleteBtn.style.borderColor = '#ff4141';
+            deleteBtn.textContent = 'X';
+            deleteBtn.addEventListener('click', () => {
+              if (confirm('Marker verwijderen?')) {
+                markers.splice(idx, 1);
+                saveData({ skipRender: true });
+                renderMap();
+                openEditor('map');
+              }
+            });
+
+            mRow.appendChild(labelSpan);
+            mRow.appendChild(coords);
+            mRow.appendChild(nameInput);
+            mRow.appendChild(statusSelect);
+            mRow.appendChild(deleteBtn);
+            markersList.appendChild(mRow);
+          });
+        } else {
+          const emptyNote = document.createElement('div');
+          emptyNote.style.color = '#aaa';
+          emptyNote.style.marginTop = '0.5rem';
+          emptyNote.style.fontSize = '0.8rem';
+          emptyNote.textContent = 'Nog geen markers. Klik op de kaart om de eerste marker te plaatsen.';
+          markersList.appendChild(emptyNote);
+        }
+
+        const openMapBtn = document.createElement('button');
+        openMapBtn.className = 'mini-btn';
+        openMapBtn.style.marginTop = '0.8rem';
+        openMapBtn.textContent = 'Open kaart om markers te plaatsen';
+        openMapBtn.onclick = () => {
+          if (!ensureAdminMode()) return;
+          setActiveMapRound(editorMapRound);
+          renderMap();
+          const tabBtn = document.querySelector('[data-top-tab="map"]');
+          if (tabBtn) tabBtn.click();
+          const mapGrid = document.getElementById('map-grid');
+          if (mapGrid) {
+            mapGrid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        };
+        markersList.appendChild(openMapBtn);
+
+        editorContent.appendChild(markersList);
+      }
+    }
+
+    function addQuestionEditorRow(container, q) {
+       const div = document.createElement('div');
+       div.className = 'edit-q-item';
+       div.style.background = 'rgba(255,255,255,0.05)';
+       div.style.padding = '0.5rem';
+       div.style.marginBottom = '0.5rem';
+       div.style.borderRadius = '4px';
+       
+       div.innerHTML = `
+          <div style="display:flex; gap:0.5rem; margin-bottom:0.3rem;">
+             <select class="admin-input q-type" style="width:100px;">
+                <option value="open" ${q.type === 'open' ? 'selected' : ''}>Open</option>
+                <option value="radio" ${q.type === 'radio' ? 'selected' : ''}>Meerkeuze</option>
+                <option value="complex" ${q.type === 'complex' ? 'selected' : ''}>Complex</option>
+             </select>
+             <input class="admin-input q-text" value="${q.text}" placeholder="Vraag tekst">
+             <button type="button" class="mini-btn" style="border-color:#ff4141; color:#ff4141;" onclick="this.closest('.edit-q-item').remove()">X</button>
+          </div>
+          <div style="margin-bottom:0.3rem;">
+             <input class="admin-input q-correct" value="${q.correctAnswer || ''}" placeholder="Correct Antwoord (voor validatie)">
+          </div>
+          <input class="admin-input q-options" value="${q.options ? q.options.join(', ') : ''}" placeholder="Opties (komma gescheiden) - alleen voor meerkeuze" style="display:${q.type === 'radio' ? 'block' : 'none'}; font-size:0.8rem;">
+       `;
+       
+       // Show/hide options input based on type
+       div.querySelector('.q-type').addEventListener('change', (e) => {
+          const optsInput = div.querySelector('.q-options');
+          optsInput.style.display = e.target.value === 'radio' ? 'block' : 'none';
+       });
+       
+       container.appendChild(div);
+    }
+
+    // --- EXISTING LOGIC (Tabs, DragDrop, Admin Toggle) ---
+    // Top-level tabs
+    (function() {
+      const buttons = document.querySelectorAll('.top-tab-button');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.topTab;
+          if (!isTopTabAccessible(target)) {
+            const message = btn.dataset.lockMessage || getPlayerFacingLockMessage(target);
+            alert(message);
+            return;
+          }
+          setActiveTopTab(target);
+        });
+      });
+    })();
+
+    // Inner test tabs + stap-indicator (REMOVED in v5.3 redesign)
+    /*
+    (function() {
+      const buttons = document.querySelectorAll('.tab-button');
+      const panels = document.querySelectorAll('.tab-panel');
+      const dots = document.querySelectorAll('.step-dot');
+
+      const stepMap = {
+        'round1': 1,
+        'round2': 2,
+        'round3': 3
+      };
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+
+          buttons.forEach(b => b.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+
+          btn.classList.add('active');
+          document.getElementById(target).classList.add('active');
+
+          const step = stepMap[target];
+          if (step) {
+            dots.forEach(dot => {
+              dot.classList.toggle('active', dot.getAttribute('data-step') == step);
+            });
+          }
+        });
+      });
+    })();
+    */
+
+    // Verdachten resetten
+    (function() {
+      const btn = document.getElementById('reset-people-btn');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        document
+          .querySelectorAll('.people-section input[type="checkbox"]')
+          .forEach(cb => cb.checked = false);
+      });
+    })();
+
+    // Admin-knop toggle + smooth scroll + PASSWORD
+    (function() {
+      const btn = document.getElementById('admin-toggle-button');
+      const wrapper = document.getElementById('admin-panel-wrapper');
+
+      if (btn && wrapper) {
+        btn.addEventListener('click', () => {
+          if (wrapper.classList.contains('admin-hidden')) {
+            ensureAdminMode();
+          } else {
+            closeAdminPanel();
+          }
+        });
+      }
+    })();
+
+    // Marker placement shortcut button
+    (function() {
+      const btn = document.getElementById('map-place-markers-btn');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        if (!ensureAdminMode()) return;
+        openEditor('map');
+        const editor = document.getElementById('admin-editor-container');
+        if (editor) {
+          editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    })();
+
+      initSecretTargetAdmin();
+      initQuickTabToggles();
+      initAdminRoundActionButtons();
+       // Initial Render
+       renderAll();
+  </script>
+</body>
+</html>
