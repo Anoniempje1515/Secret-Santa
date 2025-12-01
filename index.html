@@ -1396,6 +1396,26 @@
               <button type="button" class="mini-btn" id="admin-edit-tabs-btn">Beheer Tabbladen</button>
               <button type="button" class="mini-btn" id="admin-reset-data-btn" style="border-color: #ff4141; color: #ff4141;">Reset Alles</button>
             </div>
+
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed rgba(148,168,159,0.3);">
+              <h4 style="margin: 0 0 0.5rem; color: var(--widm-green); font-size: 0.95rem;">📤 Exporteer / Importeer Instellingen</h4>
+              <p class="admin-note" style="margin-bottom: 0.5rem;">Exporteer je huidige instellingen om ze naar GitHub te pushen, of importeer bestaande config.</p>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="mini-btn" id="admin-export-btn" style="border-color: #4dabf7; color: #4dabf7;">📋 Exporteer Config</button>
+                <button type="button" class="mini-btn" id="admin-import-btn" style="border-color: #ffd43b; color: #ffd43b;">📥 Importeer Config</button>
+              </div>
+              <div id="admin-export-container" style="display: none; margin-top: 1rem;">
+                <textarea id="admin-export-output" class="admin-textarea" rows="10" style="font-family: monospace; font-size: 0.7rem;" readonly></textarea>
+                <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                  <button type="button" class="mini-btn" id="admin-copy-export-btn">📋 Kopieer naar klembord</button>
+                </div>
+                <p class="admin-note" style="margin-top: 0.5rem;">Kopieer dit en plak het in de chat, dan update ik de code en push naar GitHub!</p>
+              </div>
+              <div id="admin-import-container" style="display: none; margin-top: 1rem;">
+                <textarea id="admin-import-input" class="admin-textarea" rows="6" style="font-family: monospace; font-size: 0.7rem;" placeholder="Plak hier je geëxporteerde JSON config..."></textarea>
+                <button type="button" class="mini-btn" id="admin-apply-import-btn" style="margin-top: 0.5rem;">✅ Toepassen</button>
+              </div>
+            </div>
             
             <!-- Editor Container (Hidden by default) -->
             <div id="admin-editor-container" style="display: none; margin-top: 1rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
@@ -3649,9 +3669,84 @@
       });
     })();
 
+    // Export/Import functionaliteit
+    function initExportImport() {
+      const exportBtn = document.getElementById('admin-export-btn');
+      const importBtn = document.getElementById('admin-import-btn');
+      const exportContainer = document.getElementById('admin-export-container');
+      const importContainer = document.getElementById('admin-import-container');
+      const exportOutput = document.getElementById('admin-export-output');
+      const copyBtn = document.getElementById('admin-copy-export-btn');
+      const importInput = document.getElementById('admin-import-input');
+      const applyBtn = document.getElementById('admin-apply-import-btn');
+
+      if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+          // Verberg import, toon export
+          if (importContainer) importContainer.style.display = 'none';
+          exportContainer.style.display = exportContainer.style.display === 'none' ? 'block' : 'none';
+          
+          if (exportContainer.style.display === 'block') {
+            // Exporteer alleen de belangrijke instellingen
+            const exportData = {
+              secretSanta: appData.secretSanta,
+              tabVisibility: appData.tabVisibility,
+              roundMaps: appData.roundMaps,
+              suspects: appData.suspects,
+              questions: appData.questions,
+              round1Complete: appData.round1Complete,
+              round2Complete: appData.round2Complete
+            };
+            exportOutput.value = JSON.stringify(exportData, null, 2);
+          }
+        });
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          exportOutput.select();
+          document.execCommand('copy');
+          copyBtn.textContent = '✅ Gekopieerd!';
+          setTimeout(() => { copyBtn.textContent = '📋 Kopieer naar klembord'; }, 2000);
+        });
+      }
+
+      if (importBtn) {
+        importBtn.addEventListener('click', () => {
+          // Verberg export, toon import
+          if (exportContainer) exportContainer.style.display = 'none';
+          importContainer.style.display = importContainer.style.display === 'none' ? 'block' : 'none';
+        });
+      }
+
+      if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+          try {
+            const importData = JSON.parse(importInput.value);
+            
+            // Merge imported data met bestaande appData
+            if (importData.secretSanta) appData.secretSanta = importData.secretSanta;
+            if (importData.tabVisibility) appData.tabVisibility = importData.tabVisibility;
+            if (importData.roundMaps) appData.roundMaps = importData.roundMaps;
+            if (importData.suspects) appData.suspects = importData.suspects;
+            if (importData.questions) appData.questions = importData.questions;
+            if (importData.round1Complete !== undefined) appData.round1Complete = importData.round1Complete;
+            if (importData.round2Complete !== undefined) appData.round2Complete = importData.round2Complete;
+            
+            saveData();
+            alert('✅ Config succesvol geïmporteerd! De pagina wordt herladen.');
+            location.reload();
+          } catch (e) {
+            alert('❌ Ongeldige JSON. Controleer of je de hele config hebt gekopieerd.');
+          }
+        });
+      }
+    }
+
       initSecretTargetAdmin();
       initQuickTabToggles();
       initAdminRoundActionButtons();
+      initExportImport();
        // Initial Render
        renderAll();
   </script>
