@@ -1060,6 +1060,120 @@
       text-shadow: 0 0 5px #000;
     }
 
+    /* Santa Hint Popup Modal */
+    .santa-popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .santa-popup {
+      background: linear-gradient(135deg, #0a1f15 0%, #0d2818 100%);
+      border: 2px solid var(--widm-green);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 40px rgba(0, 255, 157, 0.3);
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .santa-popup-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--widm-green);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px var(--widm-green);
+      border-bottom: 1px solid rgba(0, 255, 157, 0.3);
+      padding-bottom: 1rem;
+    }
+    .santa-popup-content {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 157, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .santa-popup-label {
+      font-size: 0.75rem;
+      color: var(--widm-green);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    .santa-popup-text {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--widm-text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: all;
+      cursor: text;
+    }
+    .santa-popup-hint {
+      margin-top: 1rem;
+    }
+    .santa-popup-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .santa-popup-btn {
+      font-family: 'Share Tech Mono', monospace;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .santa-popup-btn.copy-btn {
+      background: var(--widm-green);
+      color: #000;
+      border: none;
+    }
+    .santa-popup-btn.copy-btn:hover {
+      background: #00ff9d;
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+    }
+    .santa-popup-btn.close-btn {
+      background: transparent;
+      color: var(--widm-text);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .santa-popup-btn.close-btn:hover {
+      border-color: var(--widm-green);
+      color: var(--widm-green);
+    }
+    .santa-popup-copied {
+      color: var(--widm-green);
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .santa-popup-copied.show {
+      opacity: 1;
+    }
+
   </style>
 </head>
 <body>
@@ -1090,21 +1204,12 @@
         <h3>Hoe speel je dit spel?</h3>
         <p>
           Op de hoofdpagina zie je de verdachtenlijst. Zet een vinkje bij de mensen die je niet langer verdenkt
-          en maak ondertussen notities van verdachte situaties. Tijdens onze tijd samen onderzoek je mijn hints en
-          de vragen in de rondes om te ontdekken wie ik <em>niet</em> ben – zo elimineer je stap voor stap de verkeerde namen.
-        </p>
-        <ul>
-          <li><strong>Ronde 1</strong>: speel voor het eerste cadeau. Elke juiste vraag versnelt wanneer je het pakket mag claimen.</li>
-          <li><strong>Verdachten selecteren</strong>: hoe meer vragen je aandurft, hoe beter je het profiel van de Secret Santa vormt – en hoe groter de kans op een cryptische hint.</li>
-          <li><strong>Ronde 2</strong>: opnieuw wachten er vragen én een verrassingscadeau. Een hoge score betekent dat het sneller jouw kant op komt.</li>
-          <li><strong>Finale</strong>: na drie rondes waag je één definitieve gok naar naam én verstopplek. Op <strong>18 december</strong> hoor je of je gelijk hebt.</li>
-        </ul>
-        <p>
-          Er zijn dus drie rondes, drie cadeaus en maar één blauwdruk: de kaart blijft hetzelfde, maar jullie tempo bepaalt hoe lang het duurt voordat je op de juiste plek staat.
-          Blijf scherp, want wie traag antwoordt, moet langer wachten voordat de route open gaat.
+          en maak ondertussen notities van verdachte situaties.
         </p>
         <p>
-          Na de finale ligt de waarheid klaar. Heb je de meeste vragen meegepakt en de verdachte slim gekozen, dan heb je het geheime Santa-profiel in handen nog vóór de onthulling.
+          In de speelrondes beantwoord je vragen over het doen en laten van jouw Secret Santa. Voor elke goed 
+          beantwoorde vraag speel je verkeerde locaties weg, waardoor je steeds dichter bij de plek komt waar 
+          je eerste cadeau ligt.
         </p>
         <p class="story-callout">
           Niets is wat het lijkt – een Secret-Santa-versie van Wie is de Mol. Bereid je voor, want op <strong>18 december</strong> volgt het eindspel.
@@ -1394,10 +1499,11 @@
               </div>
               <div id="admin-export-container" style="display: none; margin-top: 1rem;">
                 <textarea id="admin-export-output" class="admin-textarea" rows="10" style="font-family: monospace; font-size: 0.7rem;" readonly></textarea>
-                <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
                   <button type="button" class="mini-btn" id="admin-copy-export-btn">📋 Kopieer naar klembord</button>
+                  <button type="button" class="mini-btn" id="admin-download-export-btn" style="border-color: #69db7c; color: #69db7c;">💾 Download als bestand</button>
                 </div>
-                <p class="admin-note" style="margin-top: 0.5rem;">Kopieer dit en plak het in de chat, dan update ik de code en push naar GitHub!</p>
+                <p class="admin-note" style="margin-top: 0.5rem;">Download het bestand of kopieer en plak het in de chat, dan update ik de code en push naar GitHub!</p>
               </div>
               <div id="admin-import-container" style="display: none; margin-top: 1rem;">
                 <textarea id="admin-import-input" class="admin-textarea" rows="6" style="font-family: monospace; font-size: 0.7rem;" placeholder="Plak hier je geëxporteerde JSON config..."></textarea>
@@ -1700,9 +1806,17 @@
     }
 
     const suspectSelectionLimits = { r1: 15, r2: 10, r3: 5 };
-    const MAP_MARKER_LIMIT = 6;
     const SHOW_BLUEPRINT_BLOCKS = false; // legacy grid tiles stay disabled unless explicitly re-enabled
     let markerEditReminderShown = false;
+
+    // Dynamische marker limiet: aantal vragen + 1 per ronde
+    function getMarkerLimit(round) {
+      const questionCount = appData.questions[round] ? appData.questions[round].length : 0;
+      return questionCount + 1;
+    }
+    // Fallback voor oude code die MAP_MARKER_LIMIT gebruikt
+    const MAP_MARKER_LIMIT = 6;
+
     let draggingMarkerIndex = null;
     let draggingMarkerElement = null;
     let draggingMapElement = null;
@@ -2002,10 +2116,11 @@
           markers = mapState.markers;
         }
 
-        if (markers.length > MAP_MARKER_LIMIT) {
+        const markerLimit = getMarkerLimit(round);
+        if (markers.length > markerLimit) {
           const winners = markers.filter(marker => marker.status === 'winner');
           const others = markers.filter(marker => marker.status !== 'winner');
-          mapState.markers = [...winners, ...others].slice(0, MAP_MARKER_LIMIT);
+          mapState.markers = [...winners, ...others].slice(0, markerLimit);
           markers = mapState.markers;
         }
 
@@ -2367,9 +2482,19 @@
           chip.appendChild(document.createTextNode(line));
         });
         chip.style.display = 'block';
+        chip.style.cursor = 'pointer';
+        chip.title = 'Klik om te vergroten';
+        chip.onclick = () => {
+          // Parse the hint text to show in popup
+          const hintLines = text.split('\n');
+          const molbericht = hintLines[0] || '';
+          const hintPart = hintLines.slice(1).join('\n') || '';
+          showSantaHintPopup(molbericht, hintPart);
+        };
       } else {
         chip.style.display = 'none';
         chip.textContent = '';
+        chip.onclick = null;
       }
     }
 
@@ -2406,8 +2531,9 @@
         const targetHitSpan = document.querySelector(`[data-admin-target-hit="${round}"]`);
 
         const markers = getMapMarkers(round);
+        const markerLimit = getMarkerLimit(round);
         if (markerSpan) {
-          markerSpan.textContent = `${markers.length}/${MAP_MARKER_LIMIT}`;
+          markerSpan.textContent = `${markers.length}/${markerLimit}`;
         }
 
         const hasWinner = markers.some(marker => marker.status === 'winner');
@@ -2545,6 +2671,89 @@
       appData.roundHints[round] = combinedMessage;
       updateHintChip(round);
       saveData({ skipRender: true });
+
+      // Show popup with the hint
+      showSantaHintPopup(secretWhisper, locationMessage);
+    }
+
+    function showSantaHintPopup(molbericht, hintText) {
+      // Remove existing popup if any
+      const existing = document.querySelector('.santa-popup-overlay');
+      if (existing) existing.remove();
+
+      // Extract code from hint text
+      const codeMatch = hintText.match(/Code voor de kaart:\s*(\S+)/i);
+      const code = codeMatch ? codeMatch[1] : '';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'santa-popup-overlay';
+      overlay.innerHTML = `
+        <div class="santa-popup">
+          <div class="santa-popup-title">🎯 Je hebt de SANTA in het vizier!</div>
+          <div class="santa-popup-content">
+            <div class="santa-popup-label">Molbericht:</div>
+            <div class="santa-popup-text" id="santa-molbericht">${escapeHtml(molbericht)}</div>
+          </div>
+          <div class="santa-popup-content santa-popup-hint">
+            <div class="santa-popup-label">Hint:</div>
+            <div class="santa-popup-text" id="santa-hint">${escapeHtml(hintText)}</div>
+          </div>
+          ${code ? `
+          <div class="santa-popup-actions">
+            <button class="santa-popup-btn copy-btn" id="copy-santa-code">📋 Kopieer code: ${escapeHtml(code)}</button>
+            <button class="santa-popup-btn close-btn" id="close-santa-popup">Sluiten</button>
+          </div>
+          ` : `
+          <div class="santa-popup-actions">
+            <button class="santa-popup-btn close-btn" id="close-santa-popup">Sluiten</button>
+          </div>
+          `}
+          <div class="santa-popup-copied" id="santa-copied-msg">✓ Code gekopieerd!</div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      // Copy code button handler
+      const copyBtn = document.getElementById('copy-santa-code');
+      if (copyBtn && code) {
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(code).then(() => {
+            const msg = document.getElementById('santa-copied-msg');
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 2000);
+          }).catch(() => {
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            const msg = document.getElementById('santa-copied-msg');
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 2000);
+          });
+        });
+      }
+
+      // Close button handler
+      document.getElementById('close-santa-popup').addEventListener('click', () => {
+        overlay.remove();
+      });
+
+      // Close on overlay click
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.remove();
+        }
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
 
     function buildLocationHint(round) {
@@ -2622,8 +2831,9 @@
       const mapRound = round === 'r1' ? 'r1' : (round === 'r2' ? 'r2' : null);
       if (mapRound) {
         const markers = getMapMarkers(mapRound);
-        if (markers.length !== MAP_MARKER_LIMIT) {
-          alert(`Zorg dat er precies ${MAP_MARKER_LIMIT} markers op de kaart staan voordat je antwoorden inlevert.`);
+        const markerLimit = getMarkerLimit(mapRound);
+        if (markers.length !== markerLimit) {
+          alert(`Zorg dat er precies ${markerLimit} markers op de kaart staan voordat je antwoorden inlevert (aantal vragen + 1).`);
           return;
         }
 
@@ -2655,10 +2865,10 @@
       appData.tabVisibility.map = true;
       if (round === 'r1') {
         appData.round1Complete = true;
-        alert('Ronde 1 gehaald! Laat de docent ronde 2 ontgrendelen in het admin-paneel.');
+        alert('De Santa laat weten wanneer we verder spelen!');
       } else if (round === 'r2') {
         appData.round2Complete = true;
-        alert('Ronde 2 gehaald! Vraag de docent om de finale via het admin-paneel te openen.');
+        alert('De Santa laat weten wanneer we verder spelen!');
       }
        saveData();
        renderAll();
@@ -2805,7 +3015,8 @@
         const helper = document.createElement('div');
         helper.className = 'map-admin-helper';
         const placed = markers.length || 0;
-        helper.innerHTML = `<strong>Admin-modus</strong><br>Markers geplaatst (Ronde ${round === 'r1' ? '1' : '2'}): ${placed}/${MAP_MARKER_LIMIT}.<br>Klik kort om een marker te verwijderen of sleep om te verplaatsen. Zorg dat er één WINNAAR is.`;
+        const markerLimit = getMarkerLimit(round);
+        helper.innerHTML = `<strong>Admin-modus</strong><br>Markers geplaatst (Ronde ${round === 'r1' ? '1' : '2'}): ${placed}/${markerLimit}.<br>Klik kort om een marker te verwijderen of sleep om te verplaatsen. Zorg dat er één WINNAAR is.`;
         mapContainer.appendChild(helper);
       }
     }
@@ -2823,13 +3034,14 @@
       if (event.target.closest('.map-marker')) return;
       const round = getActiveMapRound();
       const markers = getMapMarkers(round);
+      const markerLimit = getMarkerLimit(round);
 
       const rect = mapElement.getBoundingClientRect();
       const relX = clamp((event.clientX - rect.left) / rect.width, 0.02, 0.98);
       const relY = clamp((event.clientY - rect.top) / rect.height, 0.02, 0.98);
 
-      if (markers.length >= MAP_MARKER_LIMIT) {
-        alert(`Er mogen maximaal ${MAP_MARKER_LIMIT} markers tegelijk zijn.`);
+      if (markers.length >= markerLimit) {
+        alert(`Er mogen maximaal ${markerLimit} markers tegelijk zijn (aantal vragen + 1).`);
         return;
       }
 
@@ -3402,7 +3614,8 @@
 
            const info = document.createElement('div');
             info.className = 'admin-note';
-            info.innerHTML = `Klik op de kaart om markers toe te voegen, sleep bestaande markers naar de juiste plek en klik kort op een marker om hem te verwijderen. Zorg dat er precies ${MAP_MARKER_LIMIT} markers staan en dat één marker de status <strong>WINNAAR</strong> heeft.`;
+            const markerLimit = getMarkerLimit(editorMapRound);
+            info.innerHTML = `Klik op de kaart om markers toe te voegen, sleep bestaande markers naar de juiste plek en klik kort op een marker om hem te verwijderen. Zorg dat er precies <strong>${markerLimit}</strong> markers staan (aantal vragen + 1) en dat één marker de status <strong>WINNAAR</strong> heeft.`;
          editorContent.appendChild(info);
 
         const markers = getMapMarkers(editorMapRound);
@@ -3411,16 +3624,16 @@
          markersList.style.marginBottom = '1rem';
          markersList.style.padding = '0.5rem';
          markersList.style.background = 'rgba(255,255,255,0.05)';
-        markersList.innerHTML = `<strong>Actieve locaties ${roundLabel} (${MAP_MARKER_LIMIT} verplicht)</strong><br><span style="font-size:0.8rem; color:#aaa;">Gebruik de lijst om namen/status aan te passen. Sleep markers op de kaart voor exacte positie of klik om er een te verwijderen.</span>`;
+        markersList.innerHTML = `<strong>Actieve locaties ${roundLabel} (${markerLimit} verplicht)</strong><br><span style="font-size:0.8rem; color:#aaa;">Gebruik de lijst om namen/status aan te passen. Sleep markers op de kaart voor exacte positie of klik om er een te verwijderen.</span>`;
 
          const markerCountNote = document.createElement('div');
         markerCountNote.style.fontSize = '0.8rem';
         markerCountNote.style.marginTop = '0.4rem';
         markerCountNote.style.fontWeight = 'bold';
-        markerCountNote.style.color = markers.length === MAP_MARKER_LIMIT ? '#9fb89f' : '#ffb347';
-        markerCountNote.textContent = `Momenteel geplaatst: ${markers.length}/${MAP_MARKER_LIMIT}.`;
-        if (markers.length !== MAP_MARKER_LIMIT) {
-          markerCountNote.textContent += ' Voeg of verplaats markers tot je er precies zes hebt.';
+        markerCountNote.style.color = markers.length === markerLimit ? '#9fb89f' : '#ffb347';
+        markerCountNote.textContent = `Momenteel geplaatst: ${markers.length}/${markerLimit}.`;
+        if (markers.length !== markerLimit) {
+          markerCountNote.textContent += ` Voeg of verplaats markers tot je er precies ${markerLimit} hebt.`;
         }
         markersList.appendChild(markerCountNote);
 
@@ -3696,6 +3909,33 @@
           document.execCommand('copy');
           copyBtn.textContent = '✅ Gekopieerd!';
           setTimeout(() => { copyBtn.textContent = '📋 Kopieer naar klembord'; }, 2000);
+        });
+      }
+
+      const downloadBtn = document.getElementById('admin-download-export-btn');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+          const exportData = {
+            secretSanta: appData.secretSanta,
+            tabVisibility: appData.tabVisibility,
+            roundMaps: appData.roundMaps,
+            suspects: appData.suspects,
+            questions: appData.questions,
+            round1Complete: appData.round1Complete,
+            round2Complete: appData.round2Complete
+          };
+          const jsonString = JSON.stringify(exportData, null, 2);
+          const blob = new Blob([jsonString], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'secret-santa-config.json';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          downloadBtn.textContent = '✅ Gedownload!';
+          setTimeout(() => { downloadBtn.textContent = '💾 Download als bestand'; }, 2000);
         });
       }
 
