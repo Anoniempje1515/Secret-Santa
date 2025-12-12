@@ -1669,9 +1669,21 @@
         return fresh;
       }
 
-      // Bij nieuwe schema-versie: overschrijf de vragen met de nieuwste defaults.
+      // Bij nieuwe schema-versie: overschrijf de vragen met de nieuwste defaults op GitHub Pages.
       // Dit voorkomt dat GitHub Pages oude vragen blijft tonen door localStorage caching.
-      if (!saved.__schemaVersion || saved.__schemaVersion !== SCHEMA_VERSION) {
+      // Lokaal (127.0.0.1/localhost) laten we je eigen data met rust.
+      const hostname = (typeof location !== 'undefined' && location.hostname) ? location.hostname : '';
+      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+      const isGitHubPages = hostname.endsWith('github.io');
+
+      if ((!saved.__schemaVersion || saved.__schemaVersion !== SCHEMA_VERSION) && !isLocal && isGitHubPages) {
+        try {
+          const backupKey = `${STORAGE_KEY}__backup__${saved.__schemaVersion || 'unknown'}`;
+          if (!localStorage.getItem(backupKey)) {
+            localStorage.setItem(backupKey, savedRaw);
+          }
+        } catch (e) {}
+
         saved.questions = deepClone(defaultData.questions);
         saved.__schemaVersion = SCHEMA_VERSION;
         try {
