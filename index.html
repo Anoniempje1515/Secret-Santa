@@ -1607,13 +1607,57 @@
       ],
       questions: {
         r1: [
-          { id: "q1", text: "Hoeveel kinderen heeft de Secret Santa in de klas?", type: "open", correctAnswer: "25" },
-          { id: "q2", text: "Hoe vaak komen jullie elkaar tegen op een werkdag?", type: "radio", options: ["Zelden", "Soms", "Vaak", "Elk uur"], correctAnswer: "Vaak" },
-          { id: "q3", text: "Hoe laat komt deze collega meestal binnen?", type: "open", correctAnswer: "08:00" },
-          { id: "q4", text: "Welke hobby of sport beoefent deze collega?", type: "open", correctAnswer: "Tennis" }
+          {
+            id: "q1",
+            text: "Hoeveel kinderen heb ik in de klas?",
+            type: "radio",
+            options: ["Geen", "15 a 20", "21 a 25", "26 a 30"],
+            correctAnswer: "15 a 20"
+          },
+          {
+            id: "q2",
+            text: "Hoe vaak komen jullie elkaar tegen op een werkdag?",
+            type: "radio",
+            options: ["1x", "2x", "3x", "4x"],
+            correctAnswer: "3x"
+          },
+          {
+            id: "q3",
+            text: "Hoe laat kom ik meestal binnen?",
+            type: "radio",
+            options: ["07:30", "07:45", "08:00", "08:15"],
+            correctAnswer: "07:45"
+          },
+          {
+            id: "q4",
+            text: "Wat is mijn lievelingssnack?",
+            type: "radio",
+            options: ["Chips", "Chocolade", "Drop", "Koekjes"],
+            correctAnswer: "Chocolade"
+          },
+          {
+            id: "q5",
+            text: "Welke hobby's of sporten oefen ik uit?",
+            type: "radio",
+            options: ["Toneelspelen", "Muziek maken", "Zumba", "Voetbal"],
+            correctAnswer: "Zumba"
+          }
         ],
         r2: [
-          { id: "q5", text: "Wat is de favoriete snack van deze collega?", type: "open", correctAnswer: "Chocolade" }
+          {
+            id: "q6",
+            text: "Wat hebben we gemeen?",
+            type: "radio",
+            options: ["Wandelen", "Lezen", "Koken", "Reizen"],
+            correctAnswer: "Wandelen"
+          },
+          {
+            id: "q7",
+            text: "Hoeveel kinderen heb ik?",
+            type: "radio",
+            options: ["Geen", "1", "2", "3+"],
+            correctAnswer: "Geen"
+          }
         ],
         r3: [
           { id: "q8", text: "Wie is jouw hoofdverdachte?", type: "open" },
@@ -1646,7 +1690,7 @@
     };
 
     const STORAGE_KEY = 'secretSantaData_v5_2';
-    const SCHEMA_VERSION = 'v5_3_questions_2025-12-12';
+    const SCHEMA_VERSION = 'v5_3_questions_2025-12-12_mc1';
 
     function deepClone(value) {
       return JSON.parse(JSON.stringify(value));
