@@ -1732,25 +1732,9 @@
         changed = true;
       }
 
-      // Release-flags: hiermee kun je via een code push een volgende ronde openen,
-      // zonder dat je iemands data reset.
-      const RELEASE_FLAGS = {
-        round2: false,
-        round3: false
-      };
-
       if (isGitHubPages) {
         if (!saved.tabVisibility || typeof saved.tabVisibility !== 'object') {
           saved.tabVisibility = deepClone(defaultData.tabVisibility);
-          changed = true;
-        }
-
-        if (RELEASE_FLAGS.round2 && !saved.tabVisibility.round2) {
-          saved.tabVisibility.round2 = true;
-          changed = true;
-        }
-        if (RELEASE_FLAGS.round3 && !saved.tabVisibility.round3) {
-          saved.tabVisibility.round3 = true;
           changed = true;
         }
 
@@ -2024,6 +2008,8 @@
     function canToggleTab(tab, desiredState) {
       const wantUnlock = desiredState === undefined ? true : desiredState;
       if (!wantUnlock) return true;
+      // In admin-modus mag je altijd handmatig ontgrendelen.
+      if (isAdminMode()) return true;
       if (tab === 'round2' && !appData.round1Complete) {
         return false;
       }
