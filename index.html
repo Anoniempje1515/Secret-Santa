@@ -1692,6 +1692,14 @@
     const STORAGE_KEY = 'secretSantaData_v5_2';
     const SCHEMA_VERSION = 'v5_3_questions_2025-12-12_mc1';
 
+    // Losse versie per ronde, zodat we later alleen Ronde 2 kunnen bijwerken
+    // zonder iemands voortgang/notities/verdachten te resetten.
+    const QUESTION_PACK_VERSION = {
+      r1: '2025-12-12_mc1',
+      r2: '2025-12-12_mc1',
+      r3: '2025-12-12_mc1'
+    };
+
     function deepClone(value) {
       return JSON.parse(JSON.stringify(value));
     }
@@ -1713,23 +1721,70 @@
         return fresh;
       }
 
-      // Bij nieuwe schema-versie: overschrijf de vragen met de nieuwste defaults op GitHub Pages.
-      // Dit voorkomt dat GitHub Pages oude vragen blijft tonen door localStorage caching.
-      // Lokaal (127.0.0.1/localhost) laten we je eigen data met rust.
       const hostname = (typeof location !== 'undefined' && location.hostname) ? location.hostname : '';
-      const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
       const isGitHubPages = hostname.endsWith('github.io');
 
-      if ((!saved.__schemaVersion || saved.__schemaVersion !== SCHEMA_VERSION) && !isLocal && isGitHubPages) {
-        try {
-          const backupKey = `${STORAGE_KEY}__backup__${saved.__schemaVersion || 'unknown'}`;
-          if (!localStorage.getItem(backupKey)) {
-            localStorage.setItem(backupKey, savedRaw);
-          }
-        } catch (e) {}
+      let changed = false;
 
-        saved.questions = deepClone(defaultData.questions);
+      // Schema version gebruiken we alleen voor structurele migraties.
+      if (!saved.__schemaVersion) {
         saved.__schemaVersion = SCHEMA_VERSION;
+        changed = true;
+      }
+
+      // Release-flags: hiermee kun je via een code push een volgende ronde openen,
+      // zonder dat je iemands data reset.
+      const RELEASE_FLAGS = {
+        round2: false,
+        round3: false
+      };
+
+      if (isGitHubPages) {
+        if (!saved.tabVisibility || typeof saved.tabVisibility !== 'object') {
+          saved.tabVisibility = deepClone(defaultData.tabVisibility);
+          changed = true;
+        }
+
+        if (RELEASE_FLAGS.round2 && !saved.tabVisibility.round2) {
+          saved.tabVisibility.round2 = true;
+          changed = true;
+        }
+        if (RELEASE_FLAGS.round3 && !saved.tabVisibility.round3) {
+          saved.tabVisibility.round3 = true;
+          changed = true;
+        }
+
+        // Vragen-migratie per ronde: wijzig later alleen QUESTION_PACK_VERSION.r2
+        // om alleen Ronde 2 te vervangen (andere instellingen blijven intact).
+        if (!saved.__questionPackVersion || typeof saved.__questionPackVersion !== 'object') {
+          saved.__questionPackVersion = {};
+        }
+        if (!saved.questions || typeof saved.questions !== 'object') {
+          saved.questions = {};
+        }
+
+        ['r1', 'r2', 'r3'].forEach(round => {
+          const desiredVersion = QUESTION_PACK_VERSION[round];
+          if (!desiredVersion) return;
+
+          const currentVersion = saved.__questionPackVersion[round];
+          if (currentVersion === desiredVersion) return;
+
+          // Backup 1x voordat we iets overschrijven.
+          try {
+            const backupKey = `${STORAGE_KEY}__backup__questions__${round}__${currentVersion || 'unknown'}`;
+            if (!localStorage.getItem(backupKey)) {
+              localStorage.setItem(backupKey, savedRaw);
+            }
+          } catch (e) {}
+
+          saved.questions[round] = deepClone(defaultData.questions[round] || []);
+          saved.__questionPackVersion[round] = desiredVersion;
+          changed = true;
+        });
+      }
+
+      if (changed) {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
         } catch (e) {}
@@ -1763,6 +1818,7 @@
         }
       });
 
+      // Legacy migratie (oude saves)
       if (Array.isArray(data.markers) && data.markers.length && (!data.roundMaps.r1.markers || data.roundMaps.r1.markers.length === 0)) {
         data.roundMaps.r1.markers = data.markers;
       }
