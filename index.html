@@ -1645,7 +1645,44 @@
       }
     };
 
-    let appData = JSON.parse(localStorage.getItem('secretSantaData_v5_2')) || defaultData;
+    const STORAGE_KEY = 'secretSantaData_v5_2';
+    const SCHEMA_VERSION = 'v5_3_questions_2025-12-12';
+
+    function deepClone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function loadAppData() {
+      const savedRaw = localStorage.getItem(STORAGE_KEY);
+      if (!savedRaw) {
+        const fresh = deepClone(defaultData);
+        fresh.__schemaVersion = SCHEMA_VERSION;
+        return fresh;
+      }
+
+      let saved;
+      try {
+        saved = JSON.parse(savedRaw);
+      } catch (e) {
+        const fresh = deepClone(defaultData);
+        fresh.__schemaVersion = SCHEMA_VERSION;
+        return fresh;
+      }
+
+      // Bij nieuwe schema-versie: overschrijf de vragen met de nieuwste defaults.
+      // Dit voorkomt dat GitHub Pages oude vragen blijft tonen door localStorage caching.
+      if (!saved.__schemaVersion || saved.__schemaVersion !== SCHEMA_VERSION) {
+        saved.questions = deepClone(defaultData.questions);
+        saved.__schemaVersion = SCHEMA_VERSION;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        } catch (e) {}
+      }
+
+      return saved;
+    }
+
+    let appData = loadAppData();
 
     function ensureRoundMapStructure(data) {
       if (!data.roundMaps) {
@@ -2199,7 +2236,7 @@
 
     function saveData(options = {}) {
       enforceMarkerRules();
-      localStorage.setItem('secretSantaData_v5_2', JSON.stringify(appData));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
       if (!options.skipRender) {
         renderAll();
       } else {
