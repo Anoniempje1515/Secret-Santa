@@ -1665,7 +1665,7 @@
     };
 
     const STORAGE_KEY = 'secretSantaData_v5_2';
-    const SCHEMA_VERSION = 'v5_4_config_2025-12-14';
+    const SCHEMA_VERSION = 'v5_5_markers_2025-12-14';
 
     // Losse versie per ronde, zodat we later alleen Ronde 2 kunnen bijwerken
     // zonder iemands voortgang/notities/verdachten te resetten.
@@ -1673,6 +1673,12 @@
       r1: '2025-12-14_v2',
       r2: '2025-12-14_v3',
       r3: '2025-12-14_v2'
+    };
+
+    // Versie voor roundMaps (markers/hints) per ronde
+    const ROUNDMAP_VERSION = {
+      r1: '2025-12-14_v1',
+      r2: '2025-12-14_v1'
     };
 
     function deepClone(value) {
@@ -1739,6 +1745,29 @@
 
           saved.questions[round] = deepClone(defaultData.questions[round] || []);
           saved.__questionPackVersion[round] = desiredVersion;
+          changed = true;
+        });
+
+        // RoundMaps migratie (markers en hints) per ronde
+        if (!saved.__roundMapVersion || typeof saved.__roundMapVersion !== 'object') {
+          saved.__roundMapVersion = {};
+        }
+        if (!saved.roundMaps || typeof saved.roundMaps !== 'object') {
+          saved.roundMaps = {};
+        }
+
+        ['r1', 'r2'].forEach(round => {
+          const desiredVersion = ROUNDMAP_VERSION[round];
+          if (!desiredVersion) return;
+
+          const currentVersion = saved.__roundMapVersion[round];
+          if (currentVersion === desiredVersion) return;
+
+          // Update markers en hints voor deze ronde
+          if (defaultData.roundMaps && defaultData.roundMaps[round]) {
+            saved.roundMaps[round] = deepClone(defaultData.roundMaps[round]);
+          }
+          saved.__roundMapVersion[round] = desiredVersion;
           changed = true;
         });
       }
