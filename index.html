@@ -1591,12 +1591,16 @@
         r2: {
           mapImage: "image.png",
           mapRotation45: true,
-          markers: [],
+          markers: [
+            { relX: 0.30583333333333335, relY: 0.7297916666666666, label: "A", name: "Locatie A", status: "winner" },
+            { relX: 0.5325, relY: 0.7664583333333334, label: "B", name: "Locatie B", status: "visible" },
+            { relX: 0.49916666666666665, relY: 0.30145833333333333, label: "C", name: "Locatie C", status: "visible" },
+            { relX: 0.7408333333333333, relY: 0.4391145833333333, label: "D", name: "Locatie D", status: "visible" },
+            { relX: 0.1025, relY: 0.22578125, label: "E", name: "Locatie E", status: "visible" },
+            { relX: 0.4008333333333333, relY: 0.5124479166666667, label: "F", name: "Locatie F", status: "visible" }
+          ],
           hints: [
-            { id: "r2-h1", text: "Bewakingsbeelden tonen dat de mol steeds langs dezelfde ruimte sluipt.", locked: false, code: "" },
-            { id: "r2-h2", text: "Je vindt de plek eerder bij de leeshoek dan bij de gymzaal.", locked: true, code: "LEES" },
-            { id: "r2-h3", text: "Let op de plek waar teamleden snel overleg voeren zonder stoelen te pakken.", locked: true, code: "TEAM" },
-            { id: "r2-h4", text: "Er hangt een opvallende geur van koffie en stiften.", locked: true, code: "GEUR" }
+            { id: "r2-h1", text: "Dinsdag wordt deze plek veel gebruikt", code: "Dinsdag", locked: true }
           ]
         }
       },
