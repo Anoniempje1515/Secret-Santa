@@ -2886,6 +2886,36 @@
       });
     }
 
+    function showFinalePopup(message) {
+      const existing = document.querySelector('.santa-popup-overlay');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'santa-popup-overlay';
+      overlay.innerHTML = `
+        <div class="santa-popup">
+          <div class="santa-popup-title">Finale</div>
+          <div class="santa-popup-content santa-popup-hint">
+            <div class="santa-popup-text">${escapeHtml(message)}</div>
+          </div>
+          <div class="santa-popup-actions">
+            <button class="santa-popup-btn close-btn" id="close-finale-popup">Sluiten</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const closeBtn = document.getElementById('close-finale-popup');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => overlay.remove());
+      }
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.remove();
+        }
+      });
+    }
+
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
@@ -2919,6 +2949,24 @@
        const questions = appData.questions[round];
        let correctCount = 0;
        let totalCheckable = 0;
+
+       if (round === 'r3') {
+         const unanswered = questions.filter(q => {
+           if (!q) return false;
+           if (q.type === 'radio') {
+             return !document.querySelector(`input[name="${q.id}"]:checked`);
+           }
+           if (q.type === 'open') {
+             const input = document.getElementById(`answer-${q.id}`);
+             return !input || !input.value.trim();
+           }
+           return false;
+         });
+         if (unanswered.length > 0) {
+           alert('Vul eerst alle finale vragen in.');
+           return;
+         }
+       }
        
        questions.forEach(q => {
           if (!q.correctAnswer) return; 
@@ -3005,6 +3053,8 @@
       } else if (round === 'r2') {
         appData.round2Complete = true;
         alert('De Santa laat weten wanneer we verder spelen!');
+      } else if (round === 'r3') {
+        showFinalePopup('We zien elkaar vanavond, hopelijk heb je kunnen achterhalen wie ik ben!');
       }
        saveData();
        renderAll();
