@@ -318,19 +318,10 @@
     }
 
     .map-marker.status-winner {
-      background: #fff;
-      box-shadow: 0 0 20px #fff, 0 0 40px var(--widm-green);
-      transform: translate(-50%, -50%) scale(1.2);
-      z-index: 30;
-      animation: pulse-winner 2s infinite;
+      background: var(--widm-green);
+      box-shadow: 0 0 10px rgba(0,255,0,0.3);
     }
     
-    @keyframes pulse-winner {
-      0% { box-shadow: 0 0 20px #fff; }
-      50% { box-shadow: 0 0 40px #fff, 0 0 60px var(--widm-green); }
-      100% { box-shadow: 0 0 20px #fff; }
-    }
-
     /* Tooltip for markers */
     .map-marker:hover::before {
       content: attr(data-name);
