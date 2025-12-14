@@ -1562,22 +1562,44 @@
     }
 
     const defaultData = {
-      roundMaps: {
-        r1: createDefaultRoundMap('r1'),
-        r2: createDefaultRoundMap('r2')
+      secretSanta: {
+        name: "Sanne Duivenvoorden",
+        hint: "Molbericht: je keuze maakt mijn route zichtbaar, maar mijn naam blijft in de schaduw."
       },
-      mapLayout: [
-        // 10x10 grid approximation of the school shape
-        // 0=empty, 1=hallway, 2=room, 3=start
-        {type:0},{type:0},{type:0},{type:2,label:"Lokaal"},{type:2,label:"Lokaal"},{type:0},{type:0},{type:0},{type:0},{type:0},
-        {type:0},{type:0},{type:0},{type:1},{type:1},{type:0},{type:0},{type:0},{type:0},{type:0},
-        {type:2,label:"Gymzaal"},{type:1},{type:1},{type:1},{type:1},{type:1},{type:2,label:"Lokaal"},{type:0},{type:0},{type:0},
-        {type:2,label:"Gymzaal"},{type:1},{type:2,label:"Teamkamer"},{type:1},{type:1},{type:1},{type:1},{type:2,label:"Lokaal"},{type:0},{type:0},
-        {type:0},{type:1},{type:1},{type:1},{type:1},{type:1},{type:1},{type:1},{type:2,label:"Lokaal"},{type:0},
-        {type:0},{type:0},{type:0},{type:3,label:"Erika's Klas"},{type:1},{type:1},{type:1},{type:1},{type:1},{type:0},
-        {type:0},{type:0},{type:0},{type:2,label:"Lokaal"},{type:1},{type:1},{type:1},{type:1},{type:0},{type:0},
-        {type:0},{type:0},{type:0},{type:0},{type:2,label:"Ingang"},{type:0},{type:0},{type:0},{type:0},{type:0}
-      ],
+      tabVisibility: {
+        home: true,
+        round2: false,
+        map: false,
+        round3: false
+      },
+      roundMaps: {
+        r1: {
+          mapImage: "image.png",
+          mapRotation45: true,
+          markers: [
+            { relX: 0.16916666666666666, relY: 0.158125, label: "C", name: "Locatie C", status: "winner" },
+            { relX: 0.4975, relY: 0.318125, label: "A", name: "Locatie A", status: "visible" },
+            { relX: 0.4508333333333333, relY: 0.3597916666666667, label: "B", name: "Locatie B", status: "visible" },
+            { relX: 0.7425, relY: 0.5364583333333334, label: "D", name: "Locatie D", status: "visible" },
+            { relX: 0.31583333333333335, relY: 0.7314583333333333, label: "E", name: "Locatie E", status: "visible" },
+            { relX: 0.4125, relY: 0.513125, label: "F", name: "Locatie F", status: "visible" }
+          ],
+          hints: [
+            { id: "r1-h4", text: "Het cadeau ligt in een uithoek van de school", code: "UITHOEK", locked: true }
+          ]
+        },
+        r2: {
+          mapImage: "image.png",
+          mapRotation45: true,
+          markers: [],
+          hints: [
+            { id: "r2-h1", text: "Bewakingsbeelden tonen dat de mol steeds langs dezelfde ruimte sluipt.", locked: false, code: "" },
+            { id: "r2-h2", text: "Je vindt de plek eerder bij de leeshoek dan bij de gymzaal.", locked: true, code: "LEES" },
+            { id: "r2-h3", text: "Let op de plek waar teamleden snel overleg voeren zonder stoelen te pakken.", locked: true, code: "TEAM" },
+            { id: "r2-h4", text: "Er hangt een opvallende geur van koffie en stiften.", locked: true, code: "GEUR" }
+          ]
+        }
+      },
       suspects: [
         { name: "Judith de Jong", role: "Leerkracht groep 1/2a en 3a", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b9/33/b933debe-4a9c-407d-8d83-9f6cd8a01207/spr12a091335.jpeg__300x520_q100_crop_subsampling-2.jpg" },
         { name: "Nicolette Vintges", role: "Leerkracht groep 1/2a", img: "https://sophiascholen-live-d20c20490ce2433d90a8-18aba1b.divio-media.com/filer_public_thumbnails/filer_public/b3/4a/b34a76b2-cd86-441b-9dbd-33eb007c04e2/spr03a091307.jpg__300x520_q100_crop_subsampling-2.jpg" },
@@ -1607,69 +1629,20 @@
       ],
       questions: {
         r1: [
-          {
-            id: "q1",
-            text: "Hoeveel kinderen heb ik in de klas?",
-            type: "radio",
-            options: ["Geen", "15 a 20", "21 a 25", "26 a 30"],
-            correctAnswer: "15 a 20"
-          },
-          {
-            id: "q2",
-            text: "Hoe vaak komen jullie elkaar tegen op een werkdag?",
-            type: "radio",
-            options: ["1x", "2x", "3x", "4x"],
-            correctAnswer: "3x"
-          },
-          {
-            id: "q3",
-            text: "Hoe laat kom ik meestal binnen?",
-            type: "radio",
-            options: ["07:30", "07:45", "08:00", "08:15"],
-            correctAnswer: "07:45"
-          },
-          {
-            id: "q4",
-            text: "Wat is mijn lievelingssnack?",
-            type: "radio",
-            options: ["Chips", "Chocolade", "Drop", "Koekjes"],
-            correctAnswer: "Chocolade"
-          },
-          {
-            id: "q5",
-            text: "Welke hobby's of sporten oefen ik uit?",
-            type: "radio",
-            options: ["Toneelspelen", "Muziek maken", "Zumba", "Voetbal"],
-            correctAnswer: "Zumba"
-          }
+          { id: "r1-q1", text: "Hoeveel kinderen heb ik in de klas?", type: "radio", correctAnswer: "15 a 20", options: ["Geen", "15 a 20", "21 a 25", "26 a 30"] },
+          { id: "r1-q2", text: "Hoe vaak komen jullie elkaar tegen op een werkdag?", type: "radio", correctAnswer: "3x", options: ["1x", "2x", "3x", "4x"] },
+          { id: "r1-q3", text: "Hoe laat kom ik meestal binnen?", type: "radio", correctAnswer: "07:45", options: ["07:30", "07:45", "08:00", "08:15"] },
+          { id: "r1-q4", text: "Wat is mijn lievelingssnack?", type: "radio", correctAnswer: "Chocolade", options: ["Chips", "Chocolade", "Drop", "Koekjes"] },
+          { id: "r1-q5", text: "Welke hobby's of sporten oefen ik uit?", type: "radio", correctAnswer: "Zumba", options: ["Toneelspelen", "Muziek maken", "Zumba", "Voetbal"] }
         ],
         r2: [
-          {
-            id: "q6",
-            text: "Wat hebben we gemeen?",
-            type: "radio",
-            options: ["Wandelen", "Lezen", "Koken", "Reizen"],
-            correctAnswer: "Wandelen"
-          },
-          {
-            id: "q7",
-            text: "Hoeveel kinderen heb ik?",
-            type: "radio",
-            options: ["Geen", "1", "2", "3+"],
-            correctAnswer: "Geen"
-          }
+          { id: "r2-q1", text: "Wat hebben we gemeen?", type: "radio", correctAnswer: "Wandelen", options: ["Wandelen", "Lezen", "Koken", "Reizen", "Boodschappen doen", "Zingen"] },
+          { id: "r2-q2", text: "Hoeveel kinderen heb ik?", type: "radio", correctAnswer: "Geen", options: ["Geen", "1", "2", "3+"] }
         ],
         r3: [
-          { id: "q8", text: "Wie is jouw hoofdverdachte?", type: "open" },
-          { id: "q10", text: "Kies één combinatie: wie + plek vind jij het meest logisch?", type: "complex" }
+          { id: "r3-q1", text: "Wie is jouw hoofdverdachte?", type: "open", correctAnswer: "" },
+          { id: "r3-q2", text: "Kies één combinatie: wie + plek vind jij het meest logisch?", type: "complex", correctAnswer: "" }
         ]
-      },
-      // Visibility flags for tabs
-      tabVisibility: {
-        home: true,
-        round2: false,  // Locked
-        map: false,     // Locked initially
-        round3: false   // Locked
       },
       roundGuesses: {
         r1: [],
@@ -1682,22 +1655,18 @@
         r3: null
       },
       round1Complete: false,
-      round2Complete: false,
-      secretSanta: {
-        name: '',
-        hint: DEFAULT_SECRET_HINT
-      }
+      round2Complete: false
     };
 
     const STORAGE_KEY = 'secretSantaData_v5_2';
-    const SCHEMA_VERSION = 'v5_3_questions_2025-12-12_mc1';
+    const SCHEMA_VERSION = 'v5_4_config_2025-12-14';
 
     // Losse versie per ronde, zodat we later alleen Ronde 2 kunnen bijwerken
     // zonder iemands voortgang/notities/verdachten te resetten.
     const QUESTION_PACK_VERSION = {
-      r1: '2025-12-12_mc1',
-      r2: '2025-12-12_mc1',
-      r3: '2025-12-12_mc1'
+      r1: '2025-12-14_v2',
+      r2: '2025-12-14_v2',
+      r3: '2025-12-14_v2'
     };
 
     function deepClone(value) {
