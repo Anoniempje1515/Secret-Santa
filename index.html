@@ -1262,8 +1262,8 @@
             </ol>
             <div class="round-suspect-picker">
               <div class="picker-header">
-                <span>Verdachtenselectie – kies maximaal 15 namen</span>
-                <span class="picker-count" id="r1-suspect-counter">0/15</span>
+                <span>Verdachtenselectie – kies maximaal 10 namen</span>
+                <span class="picker-count" id="r1-suspect-counter">0/10</span>
               </div>
               <p class="hint-text">Selecteer hier de collega's die jij verdacht vindt. Als de echte Secret Santa ertussen staan, verschijnt een locatiehint.</p>
               <div class="suspect-pick-grid" id="r1-suspect-grid"></div>
@@ -1293,8 +1293,8 @@
             <ol class="questions" id="r2-questions"></ol>
             <div class="round-suspect-picker">
               <div class="picker-header">
-                <span>Verdachtenselectie – kies maximaal 10 namen</span>
-                <span class="picker-count" id="r2-suspect-counter">0/10</span>
+                <span>Verdachtenselectie – kies maximaal 6 namen</span>
+                <span class="picker-count" id="r2-suspect-counter">0/6</span>
               </div>
               <p class="hint-text">Verklein jullie lijst. Hoe beter jullie schatten, hoe sneller de locatiehint opduikt.</p>
               <div class="suspect-pick-grid" id="r2-suspect-grid"></div>
@@ -1317,8 +1317,8 @@
             <ol class="questions" id="r3-questions"></ol>
             <div class="round-suspect-picker">
               <div class="picker-header">
-                <span>Laatste selectie – kies maximaal 5 namen</span>
-                <span class="picker-count" id="r3-suspect-counter">0/5</span>
+                <span>Laatste selectie – kies maximaal 3 namen</span>
+                <span class="picker-count" id="r3-suspect-counter">0/3</span>
               </div>
               <p class="hint-text">Nu gaat het om de finale vermoedens. Raak je de juiste collega, dan licht de hint direct op.</p>
               <div class="suspect-pick-grid" id="r3-suspect-grid"></div>
@@ -1636,7 +1636,7 @@
           { id: "r1-q2", text: "Hoe vaak komen wij elkaar tegen op een werkdag?", type: "radio", correctAnswer: "3x", options: ["1x", "2x", "3x", "4x"] },
           { id: "r1-q3", text: "Hoe laat kom ik meestal binnen?", type: "radio", correctAnswer: "07:45", options: ["07:30", "07:45", "08:00", "08:15"] },
           { id: "r1-q4", text: "Wat is mijn lievelingssnack?", type: "radio", correctAnswer: "Chocolade", options: ["Chips", "Chocolade", "Drop", "Koekjes"] },
-          { id: "r1-q5", text: "Welke hobby's of sporten oefen ik uit?", type: "radio", correctAnswer: "Zumba", options: ["Toneelspelen", "Muziek maken", "Zumba", "Voetbal"] }
+          { id: "r1-q5", text: "Welke hobby's of sporten oefen ik uit?", type: "radio", correctAnswer: "Yoga", options: ["Toneelspelen", "Muziek maken", "Yoga", "Voetbal"] }
         ],
         r2: [
           { id: "r2-q1", text: "Wat hebben we gemeen?", type: "radio", correctAnswer: "Wandelen", options: ["Wandelen", "Lezen", "Koken", "Reizen", "Boodschappen doen", "Zingen"] },
@@ -1913,7 +1913,7 @@
       appData.round2Complete = false;
     }
 
-    const suspectSelectionLimits = { r1: 15, r2: 10, r3: 5 };
+    const suspectSelectionLimits = { r1: 10, r2: 6, r3: 3 };
     const SHOW_BLUEPRINT_BLOCKS = false; // legacy grid tiles stay disabled unless explicitly re-enabled
     let markerEditReminderShown = false;
 
