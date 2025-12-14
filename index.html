@@ -1557,8 +1557,8 @@
       tabVisibility: {
         home: true,
         round2: true,
-        map: false,
-        round3: false
+        map: true,
+        round3: true
       },
       roundMaps: {
         r1: {
@@ -1628,14 +1628,16 @@
         ],
         r2: [
           { id: "r2-q1", text: "Wat hebben we gemeen?", type: "radio", correctAnswer: "Wandelen", options: ["Wandelen", "Lezen", "Koken", "Reizen", "Boodschappen doen", "Zingen"] },
-          { id: "r2-q2", text: "Hoeveel kinderen heb ik?", type: "radio", correctAnswer: "Geen", options: ["Geen", "1", "2", "3+"] },
-          { id: "r2-q3", text: "Welke woonplaats heb ik?", type: "radio", correctAnswer: "Sassenheim", options: ["Lisse", "Voorhout", "Noordwijkerhout", "Sassenheim"] },
+          { id: "r2-q2", text: "Wat drink ik het liefst op werk?", type: "radio", correctAnswer: "Thee", options: ["Water", "Koffie", "Thee", "Cappuccino", "Cola"] },
+          { id: "r2-q3", text: "Waar woon ik?", type: "radio", correctAnswer: "Sassenheim", options: ["Lisse", "Voorhout", "Noordwijkerhout", "Sassenheim"] },
           { id: "r2-q4", text: "Hoe lang werk ik al op de Springplank?", type: "radio", correctAnswer: "11-15 jaar", options: ["1-5 jaar", "6-10 jaar", "11-15 jaar", "15 jaar en langer"] },
           { id: "r2-q5", text: "In welke bouw ben ik werkzaam?", type: "radio", correctAnswer: "Onderbouw", options: ["Onderbouw", "Middenbouw", "Bovenbouw", "Geen bouw / overkoepelend"] }
         ],
         r3: [
-          { id: "r3-q1", text: "Wie is jouw hoofdverdachte?", type: "open", correctAnswer: "" },
-          { id: "r3-q2", text: "Kies één combinatie: wie + plek vind jij het meest logisch?", type: "complex", correctAnswer: "" }
+          { id: "r3-q1", text: "Heb ik huisdieren?", type: "radio", correctAnswer: "Geen", options: ["Hond", "Kat", "Vissen", "Konijn", "Muizen", "Parkiet", "Geen"] },
+          { id: "r3-q2", text: "Hoeveel dagen zijn we samen op school?", type: "radio", correctAnswer: "1 dag", options: ["Geen", "1 dag", "2 dagen", "3 dagen"] },
+          { id: "r3-q3", text: "Dit moeten wij echt nog eens samen doen?", type: "radio", correctAnswer: "Naar de markt", options: ["Naar de markt", "Geocaching", "Thee drinken"] },
+          { id: "r3-q4", text: "Wie denk je dat ik ben?", type: "open", correctAnswer: "Sanne" }
         ]
       },
       roundGuesses: {
@@ -1655,12 +1657,14 @@
     const STORAGE_KEY = 'secretSantaData_v5_2';
     const SCHEMA_VERSION = 'v5_5_markers_2025-12-14';
 
+    const TAB_VISIBILITY_VERSION = '2025-12-14_v2';
+
     // Losse versie per ronde, zodat we later alleen Ronde 2 kunnen bijwerken
     // zonder iemands voortgang/notities/verdachten te resetten.
     const QUESTION_PACK_VERSION = {
       r1: '2025-12-14_v2',
-      r2: '2025-12-14_v3',
-      r3: '2025-12-14_v2'
+      r2: '2025-12-14_v4',
+      r3: '2025-12-14_v3'
     };
 
     // Versie voor roundMaps (markers/hints) per ronde
@@ -1702,8 +1706,12 @@
       }
 
       if (isGitHubPages) {
-        if (!saved.tabVisibility || typeof saved.tabVisibility !== 'object') {
+        if (!saved.__tabVisibilityVersion) {
+          saved.__tabVisibilityVersion = '';
+        }
+        if (!saved.tabVisibility || typeof saved.tabVisibility !== 'object' || saved.__tabVisibilityVersion !== TAB_VISIBILITY_VERSION) {
           saved.tabVisibility = deepClone(defaultData.tabVisibility);
+          saved.__tabVisibilityVersion = TAB_VISIBILITY_VERSION;
           changed = true;
         }
 
