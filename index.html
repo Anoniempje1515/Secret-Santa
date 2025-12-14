@@ -2768,8 +2768,13 @@
 
       const mapRound = round === 'r2' ? 'r2' : (round === 'r1' ? 'r1' : null);
       if (!mapRound) return;
-      const hintText = buildLocationHint(mapRound);
+      
+      // Haal de eerste hint tekst uit roundMaps hints array
+      const hints = getMapHints(mapRound);
+      const firstHint = Array.isArray(hints) && hints.length > 0 ? hints[0] : null;
+      const hintText = firstHint && firstHint.text ? firstHint.text : null;
       if (!hintText) return;
+      
       const unlockCode = getNextLockedHintCode(mapRound);
       const locationMessage = unlockCode
         ? `${hintText}\nCode voor de kaart: ${unlockCode}`
